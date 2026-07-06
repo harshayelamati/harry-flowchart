@@ -3,128 +3,130 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Harry Agent OS — Architecture Explorer</title>
+<title>Harry Agent OS — Architecture</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#04081c;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:12px;overflow:hidden;height:100vh;display:flex;flex-direction:column}
+body{background:#04081c;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:12px;height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* ── Auth gate ── */
+/* ── Auth ── */
 #auth-gate{position:fixed;inset:0;background:#04081c;z-index:9999;display:flex;align-items:center;justify-content:center}
-#auth-box{background:#080f22;border:1px solid #1e3060;border-radius:12px;padding:44px 52px;display:flex;flex-direction:column;align-items:center;gap:22px;box-shadow:0 0 60px rgba(59,130,246,0.1)}
-#auth-logo{font-size:30px;letter-spacing:5px;color:#3b82f6;font-weight:700;text-shadow:0 0 24px rgba(59,130,246,0.5)}
-#auth-subtitle{font-size:10px;color:#334155;letter-spacing:2px;text-transform:uppercase;margin-top:-12px}
-#auth-label{font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase;align-self:flex-start}
-#auth-input{background:#04081c;border:1px solid #1e3060;color:#e2e8f0;padding:10px 16px;border-radius:6px;font-family:inherit;font-size:16px;width:240px;letter-spacing:5px;text-align:center;outline:none;transition:border-color .2s}
-#auth-input:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}
-#auth-input.shake{animation:shake .35s ease}
+#auth-box{background:#080f22;border:1px solid #1e3060;border-radius:12px;padding:44px 52px;display:flex;flex-direction:column;align-items:center;gap:20px;box-shadow:0 0 60px rgba(59,130,246,.1)}
+#auth-logo{font-size:30px;letter-spacing:5px;color:#3b82f6;font-weight:700;text-shadow:0 0 24px rgba(59,130,246,.5)}
+#auth-sub{font-size:10px;color:#334155;letter-spacing:2px;text-transform:uppercase;margin-top:-10px}
+#auth-lbl{font-size:10px;color:#475569;letter-spacing:1px;text-transform:uppercase;align-self:flex-start}
+#auth-in{background:#04081c;border:1px solid #1e3060;color:#e2e8f0;padding:10px 16px;border-radius:6px;font-family:inherit;font-size:16px;width:240px;letter-spacing:5px;text-align:center;outline:none;transition:border-color .2s}
+#auth-in:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.15)}
+#auth-in.shake{animation:shake .35s ease}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-#auth-btn{background:#1e3a8a;color:#93c5fd;border:1px solid #2563eb;border-radius:6px;padding:9px 36px;font-family:inherit;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s;width:100%}
+#auth-btn{background:#1e3a8a;color:#93c5fd;border:1px solid #2563eb;border-radius:6px;padding:9px 36px;font-family:inherit;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:background .15s}
 #auth-btn:hover{background:#2563eb;color:#fff}
-#auth-error{font-size:10px;color:#ef4444;letter-spacing:1px;min-height:14px}
+#auth-err{font-size:10px;color:#ef4444;letter-spacing:1px;min-height:14px}
 #auth-hint{font-size:9px;color:#1e293b;letter-spacing:1px}
 
 /* ── Top bar ── */
-#topbar{height:44px;min-height:44px;background:#060d20;border-bottom:1px solid #1e2d50;display:flex;align-items:center;gap:16px;padding:0 16px;flex-shrink:0}
-#topbar-logo{font-size:13px;font-weight:700;color:#3b82f6;letter-spacing:3px;text-shadow:0 0 12px rgba(59,130,246,.4);white-space:nowrap}
-#topbar-sep{color:#1e2d50;font-size:16px}
-#topbar-title{font-size:10px;color:#475569;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap}
-#search-input{flex:1;max-width:320px;background:#04081c;border:1px solid #1e3060;color:#a0b4d0;padding:5px 10px;border-radius:5px;font-size:11px;font-family:inherit;outline:none}
+#topbar{height:44px;min-height:44px;background:#060d20;border-bottom:1px solid #1e2d50;display:flex;align-items:center;gap:0;padding:0;flex-shrink:0}
+#tb-brand{padding:0 18px;font-size:13px;font-weight:700;color:#3b82f6;letter-spacing:3px;text-shadow:0 0 12px rgba(59,130,246,.4);white-space:nowrap;border-right:1px solid #1e2d50;height:100%;display:flex;align-items:center}
+#tb-tabs{display:flex;height:100%;padding:0 8px;gap:2px;align-items:center}
+.tab-btn{padding:5px 16px;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:4px;border:1px solid transparent;color:#334155;background:none;font-family:inherit;transition:all .15s}
+.tab-btn:hover{color:#64748b;background:#0a1428}
+.tab-btn.active{color:#93c5fd;background:#0f1e3a;border-color:#1e3060}
+#tb-search{padding:0 12px;border-left:1px solid #1e2d50;height:100%;display:flex;align-items:center;flex:1;max-width:320px}
+#search-input{width:100%;background:#04081c;border:1px solid #1e3060;color:#a0b4d0;padding:5px 10px;border-radius:5px;font-size:11px;font-family:inherit;outline:none}
 #search-input:focus{border-color:#3b82f6}
-#search-input::placeholder{color:#1e3a5f}
-#topbar-stats{margin-left:auto;display:flex;gap:16px}
-.stat-pill{font-size:9px;color:#334155;letter-spacing:1px;display:flex;gap:5px;align-items:center}
-.stat-num{color:#3b82f6;font-weight:700}
+#search-input::placeholder{color:#1e3060}
+#tb-stats{margin-left:auto;display:flex;gap:16px;padding:0 16px;border-left:1px solid #1e2d50;height:100%;align-items:center}
+.stat{font-size:9px;color:#334155;display:flex;gap:4px;align-items:center}
+.stat b{color:#3b82f6}
 
-/* ── Main layout ── */
-#main{display:flex;flex:1;overflow:hidden}
+/* ── Views ── */
+#view-explorer{display:flex;flex:1;overflow:hidden}
+#view-flow{display:none;flex:1;overflow:hidden;position:relative}
 
-/* ── Left sidebar ── */
-#sidebar{width:260px;min-width:260px;background:#060d20;border-right:1px solid #1e2d50;display:flex;flex-direction:column;overflow:hidden}
-#sidebar-list{overflow-y:auto;flex:1;padding:8px 0}
-.layer-group{margin-bottom:2px}
-.layer-hdr{padding:7px 12px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:7px;user-select:none;transition:background .1s}
-.layer-hdr:hover{background:#0a1428}
-.layer-hdr-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
-.layer-hdr-label{flex:1;color:#475569}
-.layer-hdr-count{font-size:9px;color:#1e3060;font-weight:700}
-.layer-hdr-arrow{font-size:8px;color:#1e3060;transition:transform .15s}
-.layer-group.open .layer-hdr-arrow{transform:rotate(90deg)}
-.layer-nodes{display:none}
-.layer-group.open .layer-nodes{display:block}
-.node-item{padding:5px 12px 5px 26px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .1s;border-radius:0}
-.node-item:hover{background:#0a1428}
-.node-item.active{background:#0f1e3a;border-left:2px solid #3b82f6;padding-left:24px}
-.node-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
-.node-name{font-size:10px;color:#64748b;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.node-item.active .node-name{color:#cbd5e1}
-.node-item.match .node-name{color:#93c5fd}
+/* ── Explorer sidebar ── */
+#ex-sidebar{width:256px;min-width:256px;background:#060d20;border-right:1px solid #1e2d50;overflow-y:auto;flex-shrink:0}
+.lg{margin-bottom:2px}
+.lg-hdr{padding:7px 12px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:6px;user-select:none}
+.lg-hdr:hover{background:#0a1428}
+.lg-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.lg-label{flex:1;color:#475569}
+.lg-count{font-size:9px;color:#1e3060;font-weight:700}
+.lg-arrow{font-size:8px;color:#1e3060;transition:transform .15s}
+.lg.open .lg-arrow{transform:rotate(90deg)}
+.lg-nodes{display:none}
+.lg.open .lg-nodes{display:block}
+.ni{padding:5px 12px 5px 26px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .1s}
+.ni:hover{background:#0a1428}
+.ni.active{background:#0f1e3a;border-left:2px solid #3b82f6;padding-left:24px}
+.ni-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.ni-name{font-size:10px;color:#64748b;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ni.active .ni-name{color:#cbd5e1}
+.ni.match .ni-name{color:#93c5fd}
 
-/* ── Detail pane ── */
-#detail{flex:1;overflow-y:auto;padding:0;background:#04081c}
-#welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:#1e3060}
-#welcome-logo{font-size:48px;letter-spacing:8px;color:#0f2040;font-weight:700}
-#welcome-sub{font-size:10px;letter-spacing:2px;color:#1e2d50;text-transform:uppercase}
-
-/* ── Detail content ── */
-#detail-content{display:none;padding:0}
-#dc-hero{padding:24px 28px 18px;border-bottom:1px solid #0f1e3a;background:#060d20}
-#dc-file{font-size:11px;color:#3b82f6;font-family:monospace;margin-bottom:4px}
-#dc-name{font-size:20px;font-weight:700;color:#e2e8f0;margin-bottom:6px;line-height:1.2}
-#dc-sublabel{font-size:11px;color:#475569;margin-bottom:14px}
-#dc-desc{font-size:11px;color:#94a3b8;line-height:1.7;max-width:760px}
-#dc-body{padding:20px 28px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:900px){#dc-body{grid-template-columns:1fr}}
-.dc-card{background:#060d20;border:1px solid #0f1e3a;border-radius:8px;overflow:hidden}
-.dc-card-hdr{padding:8px 14px;background:#080f22;border-bottom:1px solid #0f1e3a;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#334155;display:flex;align-items:center;gap:7px}
-.dc-card-hdr-dot{width:6px;height:6px;border-radius:50%}
-.dc-card-body{padding:12px 14px}
-.lines-grid{display:flex;flex-direction:column;gap:6px}
-.line-row{display:flex;align-items:center;gap:8px}
-.line-key{font-size:10px;color:#334155;width:130px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.line-badge{display:inline-block;background:#0d1a36;border:1px solid #1e3060;color:#3b82f6;font-size:10px;padding:2px 8px;border-radius:4px;font-family:monospace;cursor:pointer;transition:border-color .15s}
-.line-badge:hover{border-color:#3b82f6;background:#0f1e3a}
-.break-item{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;padding:7px 10px;border-radius:5px;border:1px solid}
-.break-item.fixed{background:#051a0e;border-color:#14532d}
-.break-item.unfixed{background:#1a0505;border-color:#450a0a}
-.break-status{font-size:9px;font-weight:700;width:36px;flex-shrink:0;padding-top:1px;letter-spacing:.5px}
-.break-status.ok{color:#4ade80}
-.break-status.warn{color:#f87171}
-.break-text{font-size:10px;color:#94a3b8;line-height:1.5;flex:1}
-.check-item{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}
-.check-num{color:#1e4080;font-size:10px;width:18px;flex-shrink:0;padding-top:1px}
-.check-text{font-size:10px;color:#64748b;line-height:1.5;flex:1}
-.impact-list{display:flex;flex-direction:column;gap:5px}
-.impact-item{font-size:10px;color:#475569;padding:5px 8px;background:#04081c;border:1px solid #0f1e3a;border-radius:4px;display:flex;align-items:center;gap:6px;line-height:1.4}
-.impact-item::before{content:'→';color:#1e3060;flex-shrink:0}
-.conn-section{margin-bottom:10px}
-.conn-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;padding:3px 0}
-.conn-calls{color:#3b82f6}.conn-from{color:#22c55e}
-.conn-item{display:flex;align-items:center;gap:8px;padding:5px 8px;background:#04081c;border:1px solid #0f1e3a;border-radius:4px;margin-bottom:4px;cursor:pointer;transition:border-color .15s}
+/* ── Detail panel (shared by both views) ── */
+#detail-pane{width:400px;min-width:400px;background:#060d20;border-left:1px solid #1e2d50;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+#dp-hero{padding:20px 22px 16px;border-bottom:1px solid #0f1e3a;background:#060d20;flex-shrink:0}
+#dp-file{font-size:11px;color:#3b82f6;font-family:monospace;margin-bottom:3px}
+#dp-name{font-size:17px;font-weight:700;color:#e2e8f0;margin-bottom:4px;line-height:1.2}
+#dp-sub{font-size:10px;color:#475569;margin-bottom:10px}
+.layer-badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:3px;border:1px solid;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+#dp-desc{font-size:10px;color:#94a3b8;line-height:1.7}
+#dp-body{flex:1;overflow-y:auto;padding:14px 16px}
+.dc{background:#04081c;border:1px solid #0f1e3a;border-radius:7px;overflow:hidden;margin-bottom:12px}
+.dc-hdr{padding:7px 12px;background:#080f22;border-bottom:1px solid #0f1e3a;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#334155;display:flex;align-items:center;gap:6px}
+.dc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dc-body{padding:10px 12px}
+.line-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.lk{font-size:10px;color:#334155;width:120px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb{display:inline-block;background:#0d1a36;border:1px solid #1e3060;color:#3b82f6;font-size:9px;padding:2px 7px;border-radius:3px;font-family:monospace;cursor:pointer}
+.lb:hover{border-color:#3b82f6;background:#0f1e3a}
+.bi{display:flex;gap:7px;margin-bottom:7px;padding:6px 9px;border-radius:5px;border:1px solid;align-items:flex-start}
+.bi.fixed{background:#051a0e;border-color:#14532d}
+.bi.risk{background:#1a0505;border-color:#450a0a}
+.bs{font-size:9px;font-weight:700;width:34px;flex-shrink:0;padding-top:1px}
+.bs.ok{color:#4ade80}.bs.warn{color:#f87171}
+.bt{font-size:10px;color:#94a3b8;line-height:1.5;flex:1}
+.ci{display:flex;gap:7px;margin-bottom:6px}
+.cn{color:#1e4080;font-size:10px;width:16px;flex-shrink:0;padding-top:1px}
+.ct{font-size:10px;color:#64748b;line-height:1.5;flex:1}
+.ii{font-size:10px;color:#475569;padding:4px 8px;background:#04081c;border:1px solid #0f1e3a;border-radius:4px;display:flex;align-items:center;gap:5px;margin-bottom:4px;line-height:1.4}
+.ii::before{content:'→';color:#1e3060;flex-shrink:0}
+.conn-item{display:flex;align-items:center;gap:7px;padding:5px 8px;background:#04081c;border:1px solid #0f1e3a;border-radius:4px;margin-bottom:4px;cursor:pointer;transition:border-color .15s}
 .conn-item:hover{border-color:#1e3060}
-.conn-item-arrow{font-size:10px;flex-shrink:0}
-.conn-item-name{font-size:10px;color:#60a5fa;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.conn-item-label{font-size:9px;color:#1e3060;text-align:right;white-space:nowrap}
+.conn-arrow{font-size:10px;flex-shrink:0}
+.conn-name{font-size:10px;color:#60a5fa;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conn-lbl{font-size:9px;color:#1e3060;text-align:right;white-space:nowrap}
+#dp-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#1e3060}
+#dp-placeholder-logo{font-size:40px;letter-spacing:6px;color:#0a1428;font-weight:700}
+#dp-placeholder-txt{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#1e2d50}
 
-/* ── Layer badge in hero ── */
-.layer-badge{display:inline-block;font-size:9px;padding:2px 8px;border-radius:3px;border:1px solid;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+/* ── Flow canvas ── */
+#flow-canvas{flex:1;overflow:hidden;background:#04081c;position:relative}
+svg#fc{width:100%;height:100%;cursor:grab}
+svg#fc:active{cursor:grabbing}
+.fnode{cursor:pointer}
+.fnode:hover .fnbg{filter:brightness(1.25)}
+.fnode.hl .fnbg{filter:brightness(1.5);stroke:#3b82f6!important;stroke-width:2!important}
+.fnode.dim{opacity:.2}
+.fntext{font-family:'JetBrains Mono',monospace;pointer-events:none;user-select:none}
+#fc-controls{position:absolute;bottom:14px;right:14px;display:flex;flex-direction:column;gap:4px}
+.fc-btn{width:28px;height:28px;background:#080f22;border:1px solid #1e2d50;color:#94a3b8;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;user-select:none}
+.fc-btn:hover{background:#0f1e3a;color:#e2e8f0}
+#fc-hint{position:absolute;bottom:14px;left:14px;color:#1e2d50;font-size:9px}
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:#04081c}
-::-webkit-scrollbar-thumb{background:#1e2d50;border-radius:2px}
-::-webkit-scrollbar-thumb:hover{background:#2d3f6b}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#04081c}::-webkit-scrollbar-thumb{background:#1e2d50;border-radius:2px}
 </style>
 </head>
 <body>
 
-<!-- Auth gate -->
+<!-- Auth -->
 <div id="auth-gate">
   <div id="auth-box">
     <div id="auth-logo">HARRY</div>
-    <div id="auth-subtitle">Agent OS · Architecture Explorer</div>
-    <div id="auth-label">Access PIN</div>
-    <input id="auth-input" type="password" maxlength="12" placeholder="••••••" autocomplete="off" autofocus>
-    <div id="auth-error"></div>
+    <div id="auth-sub">Agent OS · Architecture</div>
+    <div id="auth-lbl">Access PIN</div>
+    <input id="auth-in" type="password" maxlength="12" placeholder="••••••" autocomplete="off" autofocus>
+    <div id="auth-err"></div>
     <button id="auth-btn">UNLOCK</button>
     <div id="auth-hint">Authorized access only</div>
   </div>
@@ -132,598 +134,688 @@ body{background:#04081c;color:#e2e8f0;font-family:'JetBrains Mono',monospace;fon
 
 <!-- Top bar -->
 <div id="topbar">
-  <div id="topbar-logo">HARRY</div>
-  <div id="topbar-sep">·</div>
-  <div id="topbar-title">Architecture Explorer</div>
-  <input id="search-input" placeholder="Search modules, files, features…" autocomplete="off">
-  <div id="topbar-stats">
-    <div class="stat-pill"><span class="stat-num" id="stat-modules">34</span> modules</div>
-    <div class="stat-pill"><span class="stat-num" id="stat-layers">10</span> layers</div>
-    <div class="stat-pill"><span class="stat-num" id="stat-edges">37</span> connections</div>
+  <div id="tb-brand">HARRY</div>
+  <div id="tb-tabs">
+    <button class="tab-btn active" id="tab-explorer" onclick="switchTab('explorer')">Explorer</button>
+    <button class="tab-btn" id="tab-flow" onclick="switchTab('flow')">Flow Chart</button>
+  </div>
+  <div id="tb-search">
+    <input id="search-input" placeholder="Search modules, files…" autocomplete="off">
+  </div>
+  <div id="tb-stats">
+    <div class="stat"><b>34</b> modules</div>
+    <div class="stat"><b>10</b> layers</div>
+    <div class="stat"><b>37</b> edges</div>
   </div>
 </div>
 
-<!-- Main -->
-<div id="main">
-  <!-- Sidebar -->
-  <div id="sidebar">
-    <div id="sidebar-list"></div>
+<!-- Explorer view -->
+<div id="view-explorer">
+  <div id="ex-sidebar"></div>
+  <div style="flex:1;overflow-y:auto;background:#04081c" id="ex-detail">
+    <div id="dp-placeholder">
+      <div id="dp-placeholder-logo">H</div>
+      <div id="dp-placeholder-txt">Select a module</div>
+    </div>
+    <div id="ex-dc" style="display:none"></div>
   </div>
+</div>
 
-  <!-- Detail pane -->
-  <div id="detail">
-    <div id="welcome">
-      <div id="welcome-logo">H</div>
-      <div id="welcome-sub">Select a module from the sidebar</div>
+<!-- Flow view -->
+<div id="view-flow">
+  <div id="flow-canvas">
+    <svg id="fc" viewBox="0 0 1400 1300"></svg>
+    <div id="fc-controls">
+      <div class="fc-btn" id="fc-in">+</div>
+      <div class="fc-btn" id="fc-fit">⊡</div>
+      <div class="fc-btn" id="fc-out">−</div>
     </div>
-    <div id="detail-content">
-      <div id="dc-hero">
-        <div id="dc-file"></div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <div id="dc-name"></div>
-          <div id="dc-badge" class="layer-badge"></div>
-        </div>
-        <div id="dc-sublabel"></div>
-        <div id="dc-desc"></div>
-      </div>
-      <div id="dc-body"></div>
+    <div id="fc-hint">click node · scroll/drag to pan</div>
+  </div>
+  <div id="detail-pane">
+    <div id="dp-placeholder2" style="flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px">
+      <div style="font-size:40px;letter-spacing:6px;color:#0a1428;font-weight:700">H</div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#1e2d50">Click a node</div>
     </div>
+    <div id="dp-hero" style="display:none">
+      <div id="dp-file"></div>
+      <div id="dp-name"></div>
+      <div id="dp-badge" class="layer-badge"></div>
+      <div id="dp-sub"></div>
+      <div id="dp-desc"></div>
+    </div>
+    <div id="dp-body" style="display:none;flex:1;overflow-y:auto;padding:14px 16px"></div>
   </div>
 </div>
 
 <script>
 // ── Data ─────────────────────────────────────────────────────────────────────
 const LAYERS=[
-  {id:'entry',    label:'Entry Points',             color:'#2563eb'},
-  {id:'master',   label:'Master Dispatcher',        color:'#7c3aed'},
-  {id:'pipeline', label:'Cognitive Pipeline',       color:'#7c3aed'},
-  {id:'routing',  label:'Routing Layer',            color:'#1d4ed8'},
-  {id:'intelligence',label:'Intelligence Modules',  color:'#065f46'},
-  {id:'agents',   label:'Agent Layer',              color:'#9a3412'},
-  {id:'integrations',label:'Integrations',          color:'#1e3a5f'},
-  {id:'infra',    label:'Infrastructure',           color:'#334155'},
-  {id:'scheduler',label:'Scheduler',               color:'#134e4a'},
-  {id:'frontend', label:'Frontend (Genesis HUD)',   color:'#134e4a'},
+  {id:'entry',    label:'Entry Points',          color:'#2563eb'},
+  {id:'master',   label:'Master Dispatcher',     color:'#7c3aed'},
+  {id:'pipeline', label:'Cognitive Pipeline',    color:'#7c3aed'},
+  {id:'routing',  label:'Routing Layer',         color:'#1d4ed8'},
+  {id:'intelligence',label:'Intelligence',       color:'#065f46'},
+  {id:'agents',   label:'Agent Layer',           color:'#9a3412'},
+  {id:'integrations',label:'Integrations',       color:'#1e3a5f'},
+  {id:'infra',    label:'Infrastructure',        color:'#334155'},
+  {id:'scheduler',label:'Scheduler',            color:'#134e4a'},
+  {id:'frontend', label:'Frontend (Genesis HUD)',color:'#134e4a'},
 ];
 
+// x,y,w,h for flow chart layout
 const NODES=[
-{id:'telegram',layer:'entry',label:'telegram_bot.py',sublabel:'Telegram Webhook + Bot',color:'#1e3a8a',
- file:'bot/telegram_bot.py',
- lines:{webhook:'L1-50',signature_verify:'L340-360',dedup:'L365-385',oauth_callback:'L437-448',health_check:'L459-500'},
- desc:'Main Telegram interface. Receives webhook POSTs, verifies X-Telegram-Bot-Api-Secret-Token via hmac.compare_digest, deduplicates by update_id in processed_updates table, routes to Harry for all message types including voice notes.',
- impacts:['master/harry.py — every message passes through','core/auth.py — PIN verification for sensitive commands','integrations/tts.py — voice note replies','bot/notifier.py — outbound alerts'],
- breaks:['Signature mismatch → 403 all messages (if WEBHOOK_SECRET set wrong)','Dedup failure → duplicate processing for burst messages','OAuth callback fails → Gmail re-auth broken','WEBHOOK_SECRET not set → any POST accepted (CRITICAL)'],
- checks:['WEBHOOK_SECRET env var set and matches BotFather secret','processed_updates table: check update_id rows','hmac import at L354','update_id NOT NULL in DB']},
+{id:'telegram',layer:'entry',x:130,y:50,w:190,h:44,label:'telegram_bot.py',sublabel:'Telegram Webhook + Bot',color:'#1e3a8a',
+ file:'bot/telegram_bot.py',lines:{webhook:'L1-50',signature_verify:'L340-360',dedup:'L365-385',oauth_callback:'L437-448'},
+ desc:'Receives webhook POSTs, verifies X-Telegram-Bot-Api-Secret-Token via hmac.compare_digest, deduplicates by update_id, routes to Harry for all message types.',
+ impacts:['master/harry.py — every message','core/auth.py — PIN verification','integrations/tts.py — voice replies'],
+ breaks:['Signature mismatch → 403 all messages','Dedup failure → duplicate processing','WEBHOOK_SECRET not set → any POST accepted (CRITICAL)'],
+ checks:['WEBHOOK_SECRET env var set','processed_updates table rows present','hmac import at L354','update_id NOT NULL in DB']},
 
-{id:'dashboard_api',layer:'entry',label:'dashboard_api.py',sublabel:'32 REST endpoints + WebSocket',color:'#1e3a8a',
- file:'bot/dashboard_api.py',
- lines:{auth_check:'L1-40',chat_endpoint:'L80-120',ws_endpoint:'L150-200',transcribe:'L1853-1920',prompts_crud:'L800-900',kill_switch:'L600-650'},
- desc:'FastAPI application serving 32 REST endpoints and a WebSocket channel. Handles dashboard chat, TTS synthesis, audio transcription, agent management, kill-switch toggle, approval gates, and prompt CRUD. DASHBOARD_TOKEN=dev means all endpoints are currently open.',
- impacts:['All 32 API routes consumed by genesis-dashboard','WebSocket broadcasts to all connected clients','master/harry.py receives chat messages','core/auth.py validates the dashboard token'],
- breaks:['DASHBOARD_TOKEN not set or "dev" → all endpoints unauthenticated (CURRENT STATE)','Rate limiter failure → DoS window open','Agent name not validated → potential path traversal in prompts endpoint'],
- checks:['Set DASHBOARD_TOKEN to a real secret (not "dev")','_validate_agent_name() regex enforced on all agent-name params','MAX_AUDIO_BYTES check in /api/transcribe','hmac.compare_digest on token comparison']},
+{id:'dashboard_api',layer:'entry',x:370,y:50,w:190,h:44,label:'dashboard_api.py',sublabel:'32 REST + WebSocket',color:'#1e3a8a',
+ file:'bot/dashboard_api.py',lines:{auth_check:'L1-40',chat_endpoint:'L80-120',ws_endpoint:'L150-200',transcribe:'L1853-1920'},
+ desc:'FastAPI serving 32 REST endpoints + WebSocket. Dashboard chat, TTS, transcription, agent mgmt, kill-switch, approval gates. DASHBOARD_TOKEN=dev → all endpoints open.',
+ impacts:['All 32 API routes','WebSocket broadcasts','master/harry.py — chat','core/auth.py — token check'],
+ breaks:['DASHBOARD_TOKEN="dev" → unauthenticated endpoints (CURRENT STATE)','Rate limiter failure → DoS window','Agent name not validated → path traversal'],
+ checks:['Set DASHBOARD_TOKEN to real secret','_validate_agent_name() regex on all agent params','MAX_AUDIO_BYTES in /api/transcribe','hmac.compare_digest on token comparison']},
 
-{id:'websocket',layer:'entry',label:'WebSocket /ws',sublabel:'Real-time dashboard feed',color:'#1e3a8a',
- file:'bot/dashboard_api.py',
- lines:{ws_route:'L150-200',broadcast:'L210-240',event_types:'L245-280'},
- desc:'Persistent WebSocket delivering live events to the Genesis HUD. Event types: log, snapshot, tool_call, kill_switch, chat_message, spoken, approval_resolved. Token passed as URL query param — this means it appears in nginx access logs.',
- impacts:['genesis-dashboard live updates (all panels)','Zustand store state changes via handleWsEvent'],
- breaks:['Token in URL → nginx access log exposure (design debt)','Connection registry not pruned → dead connections accumulate','New event type added server-side but not handled in store.ts → silent drop'],
- checks:['Token exposure in nginx /var/log/nginx/access.log','Store.ts handleWsEvent handles all 7 event types','Connection cleanup on client disconnect confirmed']},
+{id:'websocket',layer:'entry',x:610,y:50,w:190,h:44,label:'WebSocket /ws',sublabel:'Real-time dashboard feed',color:'#1e3a8a',
+ file:'bot/dashboard_api.py',lines:{ws_route:'L150-200',broadcast:'L210-240',event_types:'L245-280'},
+ desc:'Persistent WebSocket delivering live events: log, snapshot, tool_call, kill_switch, chat_message, spoken, approval_resolved. Token in URL → appears in nginx access logs.',
+ impacts:['genesis-dashboard live updates','Zustand store via handleWsEvent'],
+ breaks:['Token in URL → nginx log exposure','Dead connections accumulate in registry','New event type server-side not in store.ts → silently dropped'],
+ checks:['nginx access log for token exposure','All 7 event types in handleWsEvent','Connection cleanup on client disconnect']},
 
-{id:'harry_main',layer:'master',label:'master/harry.py',sublabel:'Harry._route_message() — central dispatcher',color:'#5b21b6',
- file:'master/harry.py',
- lines:{route_message:'L490-540',verify_response:'L570-620',auto_cleanup:'L1870-1890',bump_call:'L543-560',attach_spoken:'L560-580'},
- desc:'Singleton Harry class. Entry point for all messages. Calls CognitiveFlow pipeline, then runs _verify_response() safety scan on ALL responses including clarifications (moved before the clarification branch). Bumps call counts, stores memory, triggers voice synthesis.',
- impacts:['core/cognitive_flow.py — every message triggers pipeline','agents/memory_agent.py — stores each turn','integrations/tts.py — spoken version for voice','core/token_budget.py — cost tracking per call'],
- breaks:['_verify_response() inside clarification branch only → unsafe clarifications bypass scan (FIXED: moved before branch)','Weekly summary missing f-prefix → literal {agent_count} in message','_auto_cleanup uses relative path → misses logs dir (FIXED: now pathlib)'],
- checks:['L499: verify_response called BEFORE if not result.get("needs_clarification")','L1874: uses pathlib.Path(__file__).parent.parent / "logs"','f-string prefix on weekly summary message','_active_tasks dict has no leaked keys on idle']},
+{id:'harry_main',layer:'master',x:390,y:160,w:220,h:46,label:'master/harry.py',sublabel:'_route_message() — central dispatcher',color:'#5b21b6',
+ file:'master/harry.py',lines:{route_message:'L490-540',verify_response:'L570-620',auto_cleanup:'L1870-1890',bump_call:'L543-560'},
+ desc:'Singleton Harry class. Calls CognitiveFlow pipeline, runs _verify_response() safety scan on ALL responses (before clarification branch). Bumps call counts, stores memory, triggers voice.',
+ impacts:['core/cognitive_flow.py — pipeline','agents/memory_agent.py — stores turns','integrations/tts.py — spoken version','core/token_budget.py — cost'],
+ breaks:['_verify_response inside clarification branch → unsafe clarifications (FIXED)','Weekly summary missing f-prefix → literal {agent_count} shown','_auto_cleanup relative path → misses logs dir (FIXED: pathlib)'],
+ checks:['L499: verify_response BEFORE if not needs_clarification','L1874: pathlib.Path(__file__).parent.parent / "logs"','f-string on weekly summary','_active_tasks dict clean on idle']},
 
-{id:'cognitive_flow',layer:'pipeline',label:'core/cognitive_flow.py',sublabel:'5-stage DONNA→MIKE→HARVEY→MIKE→DONNA pipeline',color:'#5b21b6',
- file:'core/cognitive_flow.py',
- lines:{process:'L50-120',donna_in:'L55-90',mike_route:'L120-200',harvey_verify:'L300-380',mike_synth:'L400-450',donna_out:'L450-520',decomposed_fix:'L105-115'},
- desc:'Orchestrates the full 5-phase cognitive pipeline. DONNA (input sanitization + episodic context) → MIKE (routing + agent execution) → HARVEY (safety verify + quality check) → MIKE (response synthesis) → DONNA (output formatting). Stores self._decomposed so _close() can access A3 goal plan.',
- impacts:['core/routing_engine.py — routing decision','All intelligence modules (A1-F33) — attached as middleware','core/response_synthesizer.py — multi-agent merge','core/harry_cache.py — cache reads/writes'],
- breaks:['_decomposed not saved as instance var → A3 goal plan silently skipped in _close() (FIXED)','_RESPONSE_CACHE unbounded growth over time (LRU cap at 128 entries)','Episodic context overwrite (dict overwrite instead of merge) → memory lost between turns'],
- checks:['self._decomposed = _decomposed assigned at L105','_RESPONSE_CACHE_MAX=128 with LRU eviction at L208','Episodic merge: verify dict update not overwrite at L185','_close() clears self._decomposed after use to free memory']},
+{id:'cognitive_flow',layer:'pipeline',x:330,y:272,w:340,h:46,label:'core/cognitive_flow.py',sublabel:'5-phase DONNA→MIKE→HARVEY→MIKE→DONNA',color:'#5b21b6',
+ file:'core/cognitive_flow.py',lines:{process:'L50-120',donna_in:'L55-90',mike_route:'L120-200',harvey_verify:'L300-380',donna_out:'L450-520'},
+ desc:'Orchestrates the 5-phase pipeline. DONNA (input) → MIKE (routing+agent) → HARVEY (verify) → MIKE (synthesis) → DONNA (output). self._decomposed saved so _close() accesses A3 goal plan.',
+ impacts:['core/routing_engine.py','All intelligence modules A1-F33','core/response_synthesizer.py','core/harry_cache.py'],
+ breaks:['_decomposed not instance var → A3 silently skipped (FIXED)','_RESPONSE_CACHE unbounded → OOM (LRU cap 128)','Episodic context overwrite → memory lost'],
+ checks:['self._decomposed = _decomposed at L105','_RESPONSE_CACHE_MAX=128 LRU at L208','Episodic merge: dict update not overwrite','_close() clears self._decomposed after use']},
 
-{id:'routing_engine',layer:'routing',label:'core/routing_engine.py',sublabel:'L1 → L1.5 → L2 → L2.5 routing cascade',color:'#1e40af',
- file:'core/routing_engine.py',
- lines:{l1_keyword:'L100-200',l2_llm:'L250-300',l25_clarification:'L446-458',needs_clarif:'L307-380'},
- desc:'4-layer routing cascade. L1: keyword heuristic (fast, rule-based). L1.5: semantic embedding similarity via ChromaDB. L2: LLM classifier (Claude Haiku) when L1/L1.5 have low confidence. L2.5: clarification question — now only fires at confidence<0.50 AND ≥2 competing agents.',
- impacts:['Every single message routing decision','core/semantic_router.py — L1.5 lookup','core/bandit_router.py — UCB1 tiebreak','core/intent_chain.py — follow-up routing override'],
- breaks:['L2.5 threshold was 0.75 → over-asked clarification constantly (FIXED: now 0.50)','Clarification with only 1 alt agent → unhelpful asks (FIXED: requires ≥2 alts)','L2 LLM timeout → falls back to L1 result with warning'],
- checks:['L446: result.confidence < 0.50 (was 0.75)','L450: len(alt_agents) >= 2 enforced','L318: early return at confidence >= 0.5 skips L2','LLM_PROVIDER env var selects correct model for L2']},
+{id:'routing_engine',layer:'routing',x:60,y:388,w:200,h:44,label:'core/routing_engine.py',sublabel:'L1→L1.5→L2→L2.5 routing',color:'#1e40af',
+ file:'core/routing_engine.py',lines:{l1_keyword:'L100-200',l2_llm:'L250-300',l25_clarify:'L446-458'},
+ desc:'4-layer routing. L1 keyword → L1.5 semantic → L2 LLM → L2.5 clarification. Clarification only at confidence<0.50 AND ≥2 competing agents.',
+ impacts:['Every routing decision','core/semantic_router.py','core/bandit_router.py','core/intent_chain.py'],
+ breaks:['L2.5 threshold was 0.75 → over-asked clarification (FIXED: 0.50)','Clarification with 1 alt agent (FIXED: requires ≥2)','L2 LLM timeout → L1 fallback'],
+ checks:['L446: confidence < 0.50','L450: len(alt_agents) >= 2','Early return at confidence >= 0.5']},
 
-{id:'semantic_router',layer:'routing',label:'core/semantic_router.py',sublabel:'L1.5: ChromaDB embedding similarity ≥0.70',color:'#1e40af',
- file:'core/semantic_router.py',
- lines:{semantic_route:'L1-80',add_example:'L85-120',stable_id:'L55-65'},
- desc:'Layer 1.5 routing using all-MiniLM-L6-v2 embeddings stored in ChromaDB. Routes if cosine similarity ≥ 0.70. ChromaDB document IDs now use MD5 hash (not Python hash()) ensuring stable IDs across process restarts — previously caused "document not found" errors.',
- impacts:['Routing for paraphrase queries without exact keyword matches','ChromaDB memory/chroma/ collection health'],
- breaks:['hash() used for IDs → non-deterministic across restarts (FIXED: MD5)','Cold start: no embeddings seeded → L1.5 falls through to L2 silently','ChromaDB process down → L1.5 skipped, L2 LLM used instead'],
- checks:['L55: hashlib.md5(message.encode()).hexdigest()[:8] for stable IDs','memory/chroma/ directory exists and non-empty','ChromaDB: systemctl status chroma-server','Similarity threshold 0.70 in SIMILARITY_THRESHOLD constant']},
+{id:'semantic_router',layer:'routing',x:280,y:388,w:190,h:44,label:'core/semantic_router.py',sublabel:'L1.5: ChromaDB embeddings ≥0.70',color:'#1e40af',
+ file:'core/semantic_router.py',lines:{semantic_route:'L1-80',stable_id:'L55-65'},
+ desc:'Layer 1.5: all-MiniLM-L6-v2 in ChromaDB, similarity ≥0.70. IDs now MD5 (not Python hash) for cross-restart stability.',
+ impacts:['Paraphrase routing','ChromaDB memory/chroma/'],
+ breaks:['hash() IDs → non-deterministic (FIXED: MD5)','Cold start: no embeddings → falls to L2','ChromaDB down → L1.5 skipped'],
+ checks:['hashlib.md5 at L55','memory/chroma/ non-empty','systemctl status chroma-server']},
 
-{id:'intent_chain',layer:'routing',label:'core/intent_chain.py',sublabel:'B3: Multi-turn intent continuity tracker',color:'#1e40af',
- file:'core/intent_chain.py',
- lines:{track:'L1-80',get_active:'L85-120',expire:'L110-130'},
- desc:'B3 feature: tracks active agent intent across a 4-turn window. Follow-up messages ≤8 words OR containing "what about/why/explain/then" override routing to the current chain agent when routing confidence < 0.75. Chains expire after 4 turns or topic change.',
- impacts:['Routing override for short follow-up messages','intent_chains table in harry.db'],
- breaks:['Chain not expiring → wrong agent receives unrelated follow-up messages','Chain window too short for multi-step tasks (hardcoded 4)','Chain activation threshold 0.75 may conflict with L2.5 clarification 0.50'],
- checks:['intent_chains table rows expire after 4 turns','Check chain_agent matches expected agent for follow-ups','Confidence threshold for chain activation is separate from L2.5']},
+{id:'intent_chain',layer:'routing',x:490,y:388,w:190,h:44,label:'core/intent_chain.py',sublabel:'B3: Multi-turn intent continuity',color:'#1e40af',
+ file:'core/intent_chain.py',lines:{track:'L1-80',expire:'L110-130'},
+ desc:'B3: Tracks active agent intent 4-turn window. Follow-ups ≤8 words or "what about/why/explain/then" override routing at confidence<0.75.',
+ impacts:['Follow-up routing override','intent_chains table'],
+ breaks:['Chain not expiring → wrong agent for unrelated follow-ups','4-turn window may be too short'],
+ checks:['intent_chains rows expire after 4 turns','Chain agent matches expected']},
 
-{id:'bandit_router',layer:'routing',label:'core/bandit_router.py',sublabel:'B1: UCB1 multi-armed bandit routing',color:'#1e40af',
- file:'core/bandit_router.py',
- lines:{ucb1_select:'L36-69',record_outcome:'L72-93',bandit_report:'L96-124',load_arms:'L127-150'},
- desc:'B1 feature: UCB1 algorithm selects between competing agent candidates when routing confidence < 0.75. Score = (successes/total) + √(2·ln(N)/total). New arm pairs seeded with 1/2 (optimistic prior). FIXED: both DB queries now use standard aiosqlite cursor API instead of non-existent execute_fetchall().',
- impacts:['Agent selection for ambiguous message types over time','bandit_arms table — stores per (message_type, agent_name) stats'],
- breaks:['execute_fetchall() → AttributeError on aiosqlite (FIXED: cursor API)','Seeding fails on DB error → fallback to first candidate','N=0 (no history) → always picks candidates[0]'],
- checks:['Both DB calls: async with db.execute(sql) as cur: rows = await cur.fetchall()','bandit_arms has rows after first ambiguous query resolved','UCB1 score logged at DEBUG level for audit']},
+{id:'bandit_router',layer:'routing',x:700,y:388,w:190,h:44,label:'core/bandit_router.py',sublabel:'B1: UCB1 adaptive agent selection',color:'#1e40af',
+ file:'core/bandit_router.py',lines:{ucb1_select:'L36-69',record_outcome:'L72-93',load_arms:'L127-150'},
+ desc:'B1: UCB1 selects between competing agents at confidence<0.75. score=(s/n)+√(2·ln(N)/n). FIXED: execute_fetchall() → standard cursor API.',
+ impacts:['Ambiguous query routing','bandit_arms table'],
+ breaks:['execute_fetchall() → AttributeError (FIXED: cursor API)','N=0 → always picks candidates[0]'],
+ checks:['async with db.execute() as cur: rows = await cur.fetchall()','bandit_arms rows after first ambiguous query']},
 
-{id:'reflection_engine',layer:'intelligence',label:'core/reflection_engine.py',sublabel:'A1 + F33: Quality scoring + self-critique',color:'#064e3b',
- file:'core/reflection_engine.py',
- lines:{score_response:'L1-80',critique:'L85-140',autotune:'L145-190'},
- desc:'A1: Scores every response 0-10 across Relevance (40%), Completeness (30%), Factuality (30%). Score<4.0 triggers auto-tuner. F33: Generates a self-critique that goes to execution trace ONLY — never appended to user response. Runs async/fire-and-forget to avoid blocking delivery.',
- impacts:['response_quality table — one row per response','Auto-tuner threshold adjustments for prompt improvement','Execution trace critique field (visible in /api/traces)'],
- breaks:['F33 critique was appended as "_Note: ..." to response (FIXED: now trace-only)','Score always 0.0 → auto-tuner fires every response','Async not fire-and-forget → blocks response delivery'],
- checks:['F33 output in trace.critique NOT in response string','response_quality table has new rows after each chat','Score non-zero for normal quality responses','asyncio.create_task() not await for fire-and-forget']},
+{id:'reflection_engine',layer:'intelligence',x:40,y:500,w:165,h:42,label:'reflection_engine.py',sublabel:'A1+F33: Score + critique',color:'#064e3b',
+ file:'core/reflection_engine.py',lines:{score:'L1-80',critique:'L85-140',autotune:'L145-190'},
+ desc:'A1: Scores responses 0-10 (Relevance 40%+Completeness 30%+Factuality 30%). F33: Self-critique to trace ONLY, never user output. Async/fire-and-forget.',
+ impacts:['response_quality table','Auto-tuner','Trace critique field'],
+ breaks:['F33 leaked as "_Note:" to user (FIXED: trace-only)','Score=0 always → over-triggers auto-tuner'],
+ checks:['F33 in trace.critique NOT response','response_quality rows after each chat','asyncio.create_task() not await']},
 
-{id:'contradiction_detector',layer:'intelligence',label:'core/contradiction_detector.py',sublabel:'A2: Memory vs response conflict detection',color:'#064e3b',
- file:'core/contradiction_detector.py',
- lines:{check:'L1-80',caveat:'L85-110'},
- desc:'A2 feature: Checks each response against top-3 ChromaDB memory nodes. If a CONTRADICTION is detected, appends a ⚠️ caveat to the response. MUST NOT fire for finance/weather/email agents where live API data always supersedes stored memory.',
- impacts:['User response content — adds caveat when contradiction detected','contradiction_log table — audit trail of detected conflicts'],
- breaks:['Finance not in exempt list → live BTC price vs old memory → false ⚠️ caveat','Exception in check() silently swallowed → no caveat when there should be one'],
- checks:['finance/weather/email in A2 exempt set','contradiction_log rows only for genuine contradictions','No ⚠️ in finance or weather responses','Exception logging in check() on failure']},
+{id:'contradiction_detector',layer:'intelligence',x:215,y:500,w:165,h:42,label:'contradiction_detector.py',sublabel:'A2: Memory vs response',color:'#064e3b',
+ file:'core/contradiction_detector.py',lines:{check:'L1-80',caveat:'L85-110'},
+ desc:'A2: Checks response against top-3 ChromaDB memory nodes. Appends ⚠️ if CONTRADICTION. Must NOT fire for finance/weather (live data supersedes memory).',
+ impacts:['User response ⚠️ caveat','contradiction_log table'],
+ breaks:['Finance not exempt → false ⚠️ on live prices','Exception silently swallowed'],
+ checks:['finance/weather in A2 exempt set','No ⚠️ in finance/weather responses']},
 
-{id:'self_consistency',layer:'intelligence',label:'core/self_consistency.py',sublabel:'A4: 3 parallel LLM calls for consensus',color:'#064e3b',
- file:'core/self_consistency.py',
- lines:{check:'L1-80',is_high_stakes:'L85-110',exempt:'L30-45'},
- desc:'A4 feature: For queries classified as "high-stakes", runs 3 parallel LLM calls and takes majority consensus. _A4_EXEMPT = {"finance","weather","email","calendar","memory","health"} prevents live API data from being overwritten by LLM training-data answers.',
- impacts:['High-stakes response quality (3x LLM cost for matched queries)','Finance/weather agents always bypass A4 — use live data'],
- breaks:['Finance not in exempt → LLM training price overwrites CoinGecko ($67k BTC was a real bug)','A4 consensus note was leaking to user via "⚠️ Note:" (FIXED: now trace-only)'],
- checks:['_A4_EXEMPT has all 6 members: finance/weather/email/calendar/memory/health','No ⚠️ or "Multiple reasoning paths" in any finance/weather response','3 asyncio.gather tasks confirmed in self_consistency.py']},
+{id:'self_consistency',layer:'intelligence',x:390,y:500,w:165,h:42,label:'self_consistency.py',sublabel:'A4: 3-parallel consensus',color:'#064e3b',
+ file:'core/self_consistency.py',lines:{check:'L1-80',exempt:'L30-45'},
+ desc:'A4: 3 parallel LLM calls for high-stakes queries. _A4_EXEMPT={"finance","weather","email","calendar","memory","health"} prevents live data overwrite.',
+ impacts:['High-stakes quality (3x cost)','Finance always bypasses A4'],
+ breaks:['Finance not exempt → $67k BTC from LLM training (FIXED)','A4 note leaking as "⚠️ Note:" (FIXED)'],
+ checks:['_A4_EXEMPT has all 6 members','No ⚠️ in finance responses']},
 
-{id:'knowledge_decay',layer:'intelligence',label:'core/knowledge_decay.py',sublabel:'C2: Memory confidence decay + re-verification',color:'#064e3b',
- file:'core/knowledge_decay.py',
- lines:{decay_pass:'L1-80',reverify:'L85-130'},
- desc:'C2 feature: Memory nodes not accessed in >30 days have their confidence score reduced below 0.35. Those stale nodes are then LLM-reverified (capped at 5 calls per pass to control cost). Runs weekly Saturday 03:00 UTC. D7 outcome feedback job shifted to 03:30 to avoid collision.',
- impacts:['ChromaDB memory node confidence scores','memory_nodes table — confidence + forgotten flag','D7 job timing — shifted to 03:30 Saturday to avoid overlap'],
- breaks:['Max 5 LLM calls per pass not enforced → runaway API cost','Reverification loop stalls → confidence never restored for good nodes','D7 + knowledge_decay at same time → LLM overload (FIXED: D7 now at 03:30)'],
- checks:['knowledge_decay_weekly job in scheduler at Sat 03:00','D7 job CronTrigger: day_of_week="sat", hour=3, minute=30','Max 5 reverification calls enforced in loop','memory_nodes.forgotten flag set for truly stale entries']},
+{id:'knowledge_decay',layer:'intelligence',x:565,y:500,w:165,h:42,label:'knowledge_decay.py',sublabel:'C2: Memory confidence decay',color:'#064e3b',
+ file:'core/knowledge_decay.py',lines:{decay:'L1-80',reverify:'L85-130'},
+ desc:'C2: Nodes not accessed >30 days → confidence<0.35 → LLM reverify (max 5/pass). Weekly Sat 03:00 UTC. D7 shifted to 03:30 to avoid collision.',
+ impacts:['ChromaDB confidence scores','memory_nodes table'],
+ breaks:['Max 5 LLM calls not enforced → runaway cost','D7+decay at same time (FIXED: D7 at 03:30)'],
+ checks:['knowledge_decay_weekly at Sat 03:00','D7 CronTrigger minute=30','Max 5 calls enforced']},
 
-{id:'error_taxonomy',layer:'intelligence',label:'core/self_healer.py',sublabel:'A3 + D4: Error taxonomy + causal healing',color:'#064e3b',
- file:'core/self_healer.py',
- lines:{dispatch_fix:'L919-990',causal_heal:'L780-815',quarantine:'L775-860',dispatch_return:'L929',backoff_reset:'L787'},
- desc:'A3 classifies failures into 5 error types: timeout, misroute, format_error, context_loss, hallucination. D4 causal_heal does LLM root-cause analysis before quarantine. FIXED: _dispatch_fix() now returns a string (not None) when no handler registered. wait_backoff path now resets error times to prevent immediate re-quarantine.',
- impacts:['Agent quarantine decisions — agent suspended on repeated errors','FIX_REGISTRY — 30+ auto-fix handlers per error type','self_healer_outcomes table — audit log of fixes attempted'],
- breaks:['_dispatch_fix() returned None → caller received None instead of status str (FIXED: L929)','wait_backoff without error time reset → agent re-quarantined immediately (FIXED: L787)','Tier>2 fix attempted without approval → ValueError raised (expected behavior)'],
- checks:['L929: return f"[self_healer] No fix handler registered for: {fix_key}"','L787: self._agent_error_times[agent_name] = [] on backoff path','FIX_REGISTRY has handler for every fix_key being dispatched','self_healer_outcomes rows match expected tier for each error type']},
+{id:'error_taxonomy',layer:'intelligence',x:740,y:500,w:165,h:42,label:'self_healer.py',sublabel:'A3+D4: Taxonomy + causal heal',color:'#064e3b',
+ file:'core/self_healer.py',lines:{dispatch:'L919-990',causal:'L780-815',quarantine:'L775-860'},
+ desc:'A3 classifies errors (5 types). D4 root-cause analysis before quarantine. FIXED: _dispatch_fix returns string. wait_backoff resets error times.',
+ impacts:['Agent quarantine','FIX_REGISTRY 30+ handlers','self_healer_outcomes'],
+ breaks:['_dispatch_fix returned None (FIXED: L929)','wait_backoff no reset → re-quarantine (FIXED: L787)'],
+ checks:['L929: returns string','L787: error_times reset on backoff','FIX_REGISTRY has handler for fix_key']},
 
-{id:'canary',layer:'intelligence',label:'core/canary.py',sublabel:'D12: Behavioral canary with expected-answer checks',color:'#064e3b',
- file:'core/canary.py',
- lines:{run_canary:'L1-80',expected_answers:'L20-50'},
- desc:'D12 UX canary: runs synthetic queries with known-answer assertions every 30 minutes via scheduler. "what is 2+2" → response must contain "4". Failures trigger auto-heal (prompt threshold adjustment) and Telegram alert. Pass rate 0-100 shown on dashboard header.',
- impacts:['Dashboard UX health score — canary_pass_rate in /api/health','Auto-tuner — adjusts prompt thresholds on canary failure','Telegram alert on canary failure chain'],
- breaks:['Expected answer pattern wrong → false-positive failures and unnecessary auto-heals','Canary query hits rate limiter → timeout recorded as failure','Auto-tuner adjusts too aggressively → degrades non-canary responses'],
- checks:['d12_ux_canary IntervalTrigger every 30min in scheduler','canary_pass_rate field in GET /api/health response','Auto-tuner only adjusts quality threshold, not raw prompt text','Canary timeout separate from regular LLM timeout']},
+{id:'canary',layer:'intelligence',x:915,y:500,w:165,h:42,label:'core/canary.py',sublabel:'D12: Behavioral canary',color:'#064e3b',
+ file:'core/canary.py',lines:{run:'L1-80',expected:'L20-50'},
+ desc:'D12: Synthetic queries with expected answers every 30min. "2+2" → must contain "4". Auto-heals prompts on failure. Score 0-100 on dashboard.',
+ impacts:['Dashboard UX health score','Auto-tuner on failure'],
+ breaks:['Wrong expected pattern → false failures','Canary timeout → failure recorded'],
+ checks:['d12_ux_canary every 30min','canary_pass_rate in /api/health']},
 
-{id:'finance_agent',layer:'agents',label:'agents/finance_agent.py',sublabel:'Crypto · Stocks · Metals · Forex',color:'#7c2d12',
- file:'agents/finance_agent.py',
- lines:{handle:'L80-200',crypto:'L210-280',indian:'L290-350',import_re:'L20'},
- desc:'Handles all financial queries. Internal routing: CoinGecko (crypto), yfinance (US stocks + Nifty/Sensex direct), get_indian_stock() (NSE/BSE), Metals.Dev (gold/silver), open.exchangerate-api.com (forex). FIXED: duplicate import re at L24 removed. Crypto check runs FIRST to prevent "bitcoin" matching ITC substring.',
- impacts:['integrations/finance.py — all price API calls','harry_cache.py — finance/gold/silver/usd_inr keys'],
- breaks:['Duplicate import re at L24 (FIXED: removed, single import at L20)','ITC stock confused with "bitcoin" substring (FIXED: crypto check runs first)','Nifty 50 showing "^NSEI $23,946" format (formatting bug in _DISPLAY_NAMES)'],
- checks:['L20: single import re, no duplicate','Crypto keyword check (bitcoin/eth/btc etc.) before Indian alias check','_INDEX_NAMES maps ^NSEI → "Nifty 50" and ^BSESN → "Sensex"','Indian stocks use get_indian_stock() not get_stock_price()']},
+{id:'finance_agent',layer:'agents',x:40,y:610,w:150,h:40,label:'finance_agent.py',sublabel:'Crypto+Stocks+Metals+Forex',color:'#7c2d12',
+ file:'agents/finance_agent.py',lines:{handle:'L80-200',crypto:'L210-280',import_re:'L20'},
+ desc:'Routes to CoinGecko (crypto), yfinance (US+indices), NSE (Indian), Metals.Dev (gold/silver), forex. FIXED: duplicate import re. Crypto check runs first.',
+ impacts:['integrations/finance.py','harry_cache finance keys'],
+ breaks:['Duplicate import re (FIXED)','ITC matches bitcoin substring (FIXED: crypto first)'],
+ checks:['Single import re at L20','Crypto check before Indian alias check']},
 
-{id:'code_agent',layer:'agents',label:'agents/code_agent.py',sublabel:'Code gen · Debug · Safe file access',color:'#7c2d12',
- file:'agents/code_agent.py',
- lines:{handle:'L80-200',extract_file:'L350-420',allowed_roots:'L355-375',blocked_names:'L377-385'},
- desc:'Handles code generation, debugging, review, and file reads. _extract_file() enforces an allowlist of permitted root directories and blocks files by name (.env, credentials, id_rsa etc.). SwiftUI context bleed fixed via explicit language detection before prompt selection.',
- impacts:['Filesystem reads (constrained to _ALLOWED_ROOTS)','_code_cache in-memory (resets on restart — design note)'],
- breaks:['Path traversal in _extract_file() (FIXED: allowlist regex + resolve check)','.env file accessible via code read (FIXED: _BLOCKED_NAMES frozenset)','SwiftUI context bleeding into Python/JS responses (FIXED: language detection)'],
- checks:['_ALLOWED_ROOTS tuple defined and non-empty','_BLOCKED_NAMES frozenset includes .env, id_rsa, credentials.json etc.','Path.resolve() checked against allowed root prefix','Language detection logic gates Swift/SwiftUI prompt section']},
+{id:'code_agent',layer:'agents',x:200,y:610,w:150,h:40,label:'code_agent.py',sublabel:'Code gen + debug + safe files',color:'#7c2d12',
+ file:'agents/code_agent.py',lines:{handle:'L80-200',extract_file:'L350-420',allowed_roots:'L355-375'},
+ desc:'Code generation, debug, file reads via _ALLOWED_ROOTS allowlist. _BLOCKED_NAMES prevents .env reads. SwiftUI bleed fixed via language detection.',
+ impacts:['Filesystem reads (allowlist only)','_code_cache in-memory'],
+ breaks:['Path traversal in extract_file (FIXED: allowlist)','SwiftUI bleed in non-iOS queries (FIXED)'],
+ checks:['_ALLOWED_ROOTS non-empty','_BLOCKED_NAMES has .env','Path.resolve() vs allowed root']},
 
-{id:'personal_agent',layer:'agents',label:'agents/personal_agent.py',sublabel:'Greeting · Briefing · Coaching',color:'#7c2d12',
- file:'agents/personal_agent.py',
- lines:{handle:'L80-160',briefing:'L165-240'},
- desc:'Personal agent handles greetings, morning briefings, emotional support, and life coaching. Morning briefing synthesizes weather+news+finance+calendar+tasks from harry_cache fresh data. Routes "gm"/"good morning"/"hello" to personal not finance.',
- impacts:['harry_cache — reads all fresh data for briefing','Multiple agent outputs synthesized in briefing','Telegram morning message at 02:30 UTC'],
- breaks:['"gm" or "good morning" incorrectly routed to finance (check L1 routing rules)','Briefing sources fail → partial briefing with no indication of failure','Finance data in briefing comes from LLM not harry_cache (A4 exempt must hold)'],
- checks:['L1 routing: "good morning","gm","hello" → personal agent','Briefing reads from harry_cache not live API calls','No LLM-hallucinated finance data in briefing output','_format_briefing handles partial data gracefully']},
+{id:'personal_agent',layer:'agents',x:360,y:610,w:150,h:40,label:'personal_agent.py',sublabel:'Greeting+Briefing+Coaching',color:'#7c2d12',
+ file:'agents/personal_agent.py',lines:{handle:'L80-160',briefing:'L165-240'},
+ desc:'Greetings, morning briefings, life coaching. Briefing synthesizes weather+news+finance+calendar from harry_cache.',
+ impacts:['harry_cache all keys','Morning Telegram message 02:30 UTC'],
+ breaks:['"gm" misrouted to finance','Briefing uses LLM not harry_cache for finance'],
+ checks:['L1 routes gm/hello → personal','Briefing reads harry_cache not live APIs']},
 
-{id:'other_agents',layer:'agents',label:'agents/ (24 more)',sublabel:'Email · Calendar · Research · Health · Jobs · Memory+',color:'#7c2d12',
- file:'agents/',
- lines:{email:'email_agent.py',calendar:'calendar_agent.py',research:'research_agent.py',health:'health_agent.py',jobs:'jobs_agent.py',memory:'memory_agent.py'},
- desc:'24 additional agents each inheriting BaseAgent: email, calendar, research, health, jobs, memory, news, life_coach, productivity, ideas, monitor, security, file, analytics, notion, github, voice, opt, browser, meditation, crypto, scheduler, weather, news. Each has async handle(message) → str.',
- impacts:['Their respective integration files','harry.db per-domain tables (health_records, job_applications etc.)'],
- breaks:['Wrong agent class name in AGENT_CLASSES dict → NameError at routing time','Agent import failure → ImportError silently falls back to personal agent','BaseAgent not properly subclassed → missing required methods'],
- checks:['All agent class names in AGENT_CLASSES match actual class definitions','Each agent has async handle(user_message, extra_context) method','BaseAgent._loop_detector.reset() called at start of each run()','Circular imports between agents and integrations']},
+{id:'other_agents',layer:'agents',x:520,y:610,w:150,h:40,label:'agents/ (24 more)',sublabel:'Email·Cal·Research·Health+',color:'#7c2d12',
+ file:'agents/',lines:{email:'email_agent.py',calendar:'calendar_agent.py',research:'research_agent.py',health:'health_agent.py'},
+ desc:'24 more agents: email, calendar, research, health, jobs, memory, news, life_coach, browser, opt, github, voice, productivity, ideas, monitor, security, file, analytics, notion, meditation.',
+ impacts:['Respective integrations','harry.db domain tables'],
+ breaks:['Wrong name in AGENT_CLASSES → NameError','Import failure → falls back to personal'],
+ checks:['All agents inherit BaseAgent','AGENT_CLASSES dict names match classes']},
 
-{id:'memory_agent',layer:'agents',label:'agents/memory_agent.py',sublabel:'ChromaDB + SQLite long-term memory',color:'#7c2d12',
- file:'agents/memory_agent.py',
- lines:{store:'L1-80',retrieve:'L85-150',consolidate:'L155-200'},
- desc:'Manages all memory operations. Stores semantically to ChromaDB and structurally to SQLite user_profile_kv. Each conversation turn is recorded here. D9 cross-session consolidation compresses old episodic memories to knowledge graph nodes nightly.',
- impacts:['ChromaDB memory/chroma/ collections (per-agent isolated)','user_profile_kv and memory_nodes SQLite tables','cognitive_flow episodic context retrieval'],
- breaks:['ChromaDB process down → memory silently not stored or retrieved','user_id=0 shared across all dashboard sessions → code cache collisions (single-user design, acceptable)','Consolidation job fails → memory_nodes grows without compression'],
- checks:['systemctl status chroma-server — must be running','memory_nodes table has confidence scores','d9_memory_consolidation job fired (Sunday 02:00 UTC)','ChromaDB collection isolation: finance_context separate from email_summaries']},
+{id:'memory_agent',layer:'agents',x:680,y:610,w:150,h:40,label:'memory_agent.py',sublabel:'ChromaDB + SQLite memory',color:'#7c2d12',
+ file:'agents/memory_agent.py',lines:{store:'L1-80',retrieve:'L85-150',consolidate:'L155-200'},
+ desc:'Stores to ChromaDB (semantic) and SQLite user_profile_kv (structured). D9 nightly consolidation. user_id=0 shared across sessions (single-user design).',
+ impacts:['ChromaDB memory/chroma/','user_profile_kv + memory_nodes','cognitive_flow episodic context'],
+ breaks:['ChromaDB down → memory not stored','Consolidation fails → memory_nodes grows'],
+ checks:['systemctl status chroma-server','d9 job fired Sunday 02:00 UTC']},
 
-{id:'finance_int',layer:'integrations',label:'integrations/finance.py',sublabel:'CoinGecko · yfinance · Metals.Dev · NSE',color:'#1e3a5f',
- file:'integrations/finance.py',
- lines:{coingecko:'L1-80',yfinance:'L85-150',indian:'L155-200',metals:'L205-250',forex:'L255-300'},
- desc:'All financial data integrations. CoinGecko for 9 crypto coins (BTC/ETH/SOL/DOGE/BNB/XRP/ADA/MATIC/LTC). yfinance for US stocks and Indian indices (^NSEI/^BSESN as direct tickers). NSE scraper via jugaad-data for Indian equities. Metals.Dev for gold/silver. Frankfurter for forex rates.',
- impacts:['finance_agent.py — all price lookups','harry_cache.py finance/gold/silver/usd_inr keys'],
- breaks:['CoinGecko rate limit (free tier: 10-30 req/min) → 429 on crypto','yfinance timeout on NSE data → Alpha Vantage fallback','METALS_API_KEY missing → metals unavailable','Nifty/Sensex showing wrong format: ^NSEI instead of display name'],
- checks:['COINGECKO_API_KEY env var (or free tier with lower limits)','METALS_API_KEY in .env','ALPHA_VANTAGE_KEY as yfinance fallback','get_stock_price(^NSEI) returns correct price in INR']},
+{id:'finance_int',layer:'integrations',x:40,y:718,w:170,h:40,label:'integrations/finance.py',sublabel:'CoinGecko+yfinance+Metals+NSE',color:'#1e3a5f',
+ file:'integrations/finance.py',lines:{coingecko:'L1-80',yfinance:'L85-150',metals:'L205-250'},
+ desc:'CoinGecko (9 crypto), yfinance (US+^NSEI/^BSESN), NSE scraper, Metals.Dev, Frankfurter forex.',
+ impacts:['finance_agent.py','harry_cache finance keys'],
+ breaks:['CoinGecko rate limit → 429','METALS_API_KEY missing → metals fail','Nifty format: ^NSEI instead of display name'],
+ checks:['METALS_API_KEY in .env','ALPHA_VANTAGE_KEY fallback','get_stock_price(^NSEI) returns INR']},
 
-{id:'gmail_int',layer:'integrations',label:'integrations/gmail.py',sublabel:'Gmail OAuth2 + CSRF protection',color:'#1e3a5f',
- file:'integrations/gmail.py',
- lines:{get_valid_creds:'L80-127',exchange_code:'L230-255',csrf_state:'L218-228',quota_counter:'L434-445'},
- desc:'Gmail OAuth2 integration with auto-refresh on every call, proactive 7-day pre-expiry refresh, 90-day keep-alive ping. OAuth callback FIXED: now validates state param via hmac.compare_digest to prevent CSRF. Double quota increment FIXED: pre-fetch _increment_quota_counter removed.',
- impacts:['email_agent.py — all email operations','gmail_token and gmail_api_calls tables in harry.db'],
- breaks:['CSRF state mismatch → OAuth callback correctly rejected (expected)','GMAIL_REFRESH_TOKEN invalid → invalid_grant → re-auth link sent via Telegram','Quota exceeded (250 units/day free) → 429 on email fetch'],
- checks:['_CSRF_STATE set in _generate_csrf_state() before auth URL','exchange_oauth_code() validates state with hmac.compare_digest','_increment_quota_counter called ONCE per fetch (not twice)','gmail_token.expires_at populated in DB']},
+{id:'gmail_int',layer:'integrations',x:220,y:718,w:170,h:40,label:'integrations/gmail.py',sublabel:'OAuth2 + CSRF guard',color:'#1e3a5f',
+ file:'integrations/gmail.py',lines:{get_valid_creds:'L80-127',exchange_code:'L230-255',csrf_state:'L218-228'},
+ desc:'Auto-refresh, 7-day proactive refresh, 90-day keep-alive. OAuth callback validates state via hmac.compare_digest. Double quota increment fixed.',
+ impacts:['email_agent.py','gmail_token + gmail_api_calls tables'],
+ breaks:['CSRF no state validation (FIXED: hmac.compare_digest)','invalid_grant → re-auth link sent','Quota 250 units/day free tier'],
+ checks:['_CSRF_STATE set before auth URL','exchange_oauth_code validates state','No double _increment_quota_counter']},
 
-{id:'tts_int',layer:'integrations',label:'integrations/tts.py',sublabel:'edge-tts → gTTS fallback + emotion',color:'#1e3a5f',
- file:'integrations/tts.py',
- lines:{synthesize:'L1-80',chunk:'L85-120',emotion:'L125-160',fallback:'L165-200'},
- desc:'TTS pipeline: edge-tts primary (en-GB-RyanNeural voice), gTTS as fallback. Text >14k chars is chunked and merged. Emotion modifiers: excited=+15% rate +8Hz pitch, calm=-15% rate. Markdown and special chars stripped before synthesis via voice_optimizer.',
- impacts:['Voice replies in Telegram bot','Dashboard audio streaming endpoint','voice_optimizer.py output feeds directly into this'],
- breaks:['edge-tts network timeout → falls to gTTS (slower, worse quality)','Markdown in text → robot reads "**bold**" literally (voice_optimizer must strip first)','Chunk merge produces silent gap between chunks'],
- checks:['edge-tts: pip show edge-tts + network reachability','gTTS fallback: pip show gTTS','voice_optimizer strips ** ## [] before passing to TTS','Chunked audio: verify no gap in merged output']},
+{id:'tts_int',layer:'integrations',x:400,y:718,w:170,h:40,label:'integrations/tts.py',sublabel:'edge-tts → gTTS + emotion',color:'#1e3a5f',
+ file:'integrations/tts.py',lines:{synthesize:'L1-80',emotion:'L125-160',fallback:'L165-200'},
+ desc:'edge-tts primary (en-GB-RyanNeural), gTTS fallback. Chunks >14k chars. Emotion: excited=+15% rate +8Hz. Markdown stripped before synthesis.',
+ impacts:['Telegram voice replies','Dashboard audio streaming'],
+ breaks:['edge-tts timeout → gTTS fallback','Markdown not stripped → robot reads ** ##'],
+ checks:['pip show edge-tts','voice_optimizer strips markdown','Chunk merge no silent gap']},
 
-{id:'tool_dispatcher',layer:'integrations',label:'core/tool_dispatcher.py',sublabel:'D11: Tool orchestration + safe AST eval',color:'#1e3a5f',
- file:'core/tool_dispatcher.py',
- lines:{dispatch:'L1-60',safe_eval_ast:'L15-45',calc:'L50-70'},
- desc:'D11 tool orchestration layer. Harry can invoke tools mid-conversation (calculator, web search, file read, etc.). _tool_calc FIXED: uses AST-based safe evaluator (ast.parse + node walking) instead of eval() to prevent RCE from LLM-sourced arithmetic expressions.',
- impacts:['Calculator tool — arithmetic during conversations','Any tool Harry executes mid-conversation (search, read, etc.)'],
- breaks:['eval() used in calculator → RCE if LLM generates malicious expression (FIXED: AST evaluator)','Unsupported AST node type → ValueError raised (expected, secure)','Tool name not in registry → graceful "tool not found" response'],
- checks:['No eval() or exec() in tool_dispatcher.py','_safe_eval_ast handles: ast.Constant, BinOp, UnaryOp only','ast.parse(expr, mode="eval") used','Tool registry has all expected tool names registered']},
+{id:'tool_dispatcher',layer:'integrations',x:580,y:718,w:170,h:40,label:'tool_dispatcher.py',sublabel:'D11: Tool orchestration + AST eval',color:'#1e3a5f',
+ file:'core/tool_dispatcher.py',lines:{dispatch:'L1-60',safe_eval_ast:'L15-45'},
+ desc:'D11 tool orchestration. _tool_calc uses AST safe evaluator (not eval()) for RCE prevention.',
+ impacts:['Calculator responses','All tools Harry executes'],
+ breaks:['eval() → RCE from LLM expression (FIXED: AST)','Unsupported AST node → ValueError (expected)'],
+ checks:['No eval() in tool_dispatcher.py','ast.parse(expr, mode="eval") used']},
 
-{id:'database',layer:'infra',label:'core/database.py',sublabel:'SQLite · 60+ tables · WAL mode · migrations',color:'#1a1a2e',
- file:'core/database.py',
- lines:{init_db:'L70-83',migrations:'L77-81',schema:'L94-500',get_db:'L30-55'},
- desc:'Central database module. init_db() creates all 60+ tables via _SCHEMA string. Schema migrations wrapped in try/except that now LOGS a WARNING for unexpected errors (not "already exists") instead of silently passing. WAL mode enabled for concurrent reader performance.',
- impacts:['Every component that calls get_db() — almost everything','Schema integrity for all 60+ tables across the system'],
- breaks:['Migration silently fails on real SQL error (FIXED: now logs WARNING for non-"already exists" errors)','get_db() used without async context manager → connection not closed (leak)','WAL mode not enabled → concurrent readers blocked during writes'],
- checks:['PRAGMA journal_mode; → "wal"','PRAGMA integrity_check; → "ok"','WARNING in logs for migration errors that are NOT "already exists"','All expected tables in sqlite_master']},
+{id:'database',layer:'infra',x:40,y:826,w:158,h:40,label:'core/database.py',sublabel:'SQLite + 60+ tables + WAL',color:'#1a1a2e',
+ file:'core/database.py',lines:{init_db:'L70-83',migrations:'L77-81',schema:'L94-500'},
+ desc:'60+ tables, WAL mode, migrations. FIXED: migration except now logs WARNING for non-"already exists" errors.',
+ impacts:['Every component using get_db()','60+ table schema integrity'],
+ breaks:['Migration silently swallows real SQL errors (FIXED: WARNING log)','WAL not set → concurrent reader blocked'],
+ checks:['PRAGMA journal_mode = wal','PRAGMA integrity_check = ok','Migration WARNING in logs']},
 
-{id:'auth',layer:'infra',label:'core/auth.py',sublabel:'PIN · session · timing-safe comparison',color:'#1a1a2e',
- file:'core/auth.py',
- lines:{verify_pin:'L155-170',compare_digest:'L162',permission_check:'L90-130'},
- desc:'Session PIN verification and action permission gating. PIN comparison FIXED to use hmac.compare_digest to prevent timing oracle attacks. HARRY_SESSION_PIN must be set in .env for MFA-protected actions to work — currently unset, breaking sensitive command auth.',
- impacts:['All sensitive Telegram commands (send email, kill switch, etc.)','Permission gate for file read, email send, external API calls'],
- breaks:['HARRY_SESSION_PIN not set → MFA permanently broken for all sensitive commands (CURRENT STATE)','Timing attack on string comparison (FIXED: hmac.compare_digest at L162)','Failed attempts not rate-limited → brute force possible'],
- checks:['HARRY_SESSION_PIN env var set to a strong PIN','hmac.compare_digest(pin, stored_pin) at L162','Failed attempt count in security_log','security_log.action = "pin_fail" on wrong PIN']},
+{id:'auth',layer:'infra',x:208,y:826,w:158,h:40,label:'core/auth.py',sublabel:'PIN + hmac.compare_digest',color:'#1a1a2e',
+ file:'core/auth.py',lines:{verify_pin:'L155-170',compare_digest:'L162'},
+ desc:'PIN verification with hmac.compare_digest (timing-safe). HARRY_SESSION_PIN unset → MFA broken for all sensitive commands (CURRENT STATE).',
+ impacts:['Sensitive Telegram commands','Permission gate for file/email/send'],
+ breaks:['HARRY_SESSION_PIN not set → MFA broken (CURRENT STATE)','Timing attack on PIN (FIXED: hmac.compare_digest)'],
+ checks:['HARRY_SESSION_PIN env var set','hmac.compare_digest at L162','Failed attempts in security_log']},
 
-{id:'circuit_breaker',layer:'infra',label:'core/circuit_breaker.py',sublabel:'CLOSED → OPEN → HALF_OPEN state machine',color:'#1a1a2e',
- file:'core/circuit_breaker.py',
- lines:{aenter:'L88-98',record_failure:'L197-212',record_success:'L190-195',lazy_load:'L88-91'},
- desc:'Circuit breaker wrapping all external integrations. 3 failures within 60s → OPEN. After recovery_timeout → HALF_OPEN: allows 1 test request. FIXED: HALF_OPEN failure now explicitly transitions back to OPEN. FIXED: DB state loaded lazily on first __aenter__ (not at class init when no event loop exists).',
- impacts:['All integrations wrapped: gmail, finance, weather, search, etc.','breaker_state table — persists circuit state across restarts'],
- breaks:['HALF_OPEN→OPEN transition missing (FIXED: explicit state check in record_failure)','DB state not loaded if Semaphore created at class init (FIXED: lazy load in __aenter__)','Recovery timeout not persisted → resets to default after restart'],
- checks:['record_failure(): elif cs.state == "half_open": cs.state = "open"','__aenter__: if not CircuitBreaker._db_initialized: await self._load_state()','breaker_state table has rows for any currently open circuits','Exponential backoff sequence: 5→10→20→40min (check BACKOFF_MINUTES)']},
+{id:'circuit_breaker',layer:'infra',x:376,y:826,w:158,h:40,label:'circuit_breaker.py',sublabel:'CLOSED→OPEN→HALF_OPEN',color:'#1a1a2e',
+ file:'core/circuit_breaker.py',lines:{aenter:'L88-98',record_failure:'L197-212',lazy_load:'L88-91'},
+ desc:'3 fails/60s → OPEN. After timeout → HALF_OPEN (1 test). FIXED: HALF_OPEN→OPEN on test fail. FIXED: DB loaded lazily in __aenter__.',
+ impacts:['All integrations wrapped','breaker_state table persists across restarts'],
+ breaks:['HALF_OPEN→OPEN missing (FIXED)','DB load at init (FIXED: lazy)'],
+ checks:['record_failure handles state=="half_open"','__aenter__ lazy loads if not _db_initialized']},
 
-{id:'rate_limiter',layer:'infra',label:'core/api_rate_limiter.py',sublabel:'Semaphore · token bucket · credit exhaustion guard',color:'#1a1a2e',
- file:'core/api_rate_limiter.py',
- lines:{semaphore:'L1-50',credit_check:'L55-80',aenter:'L30-45'},
- desc:'API rate limiting with asyncio.Semaphore (created lazily inside a running event loop, not at class instantiation). Real DeepSeek 429 credit-exhaustion detection replaces the dead "if False:" block. _paused=True on credit exhaustion, alerts via Telegram, clears on next successful call.',
- impacts:['All LLM API calls (Anthropic Sonnet/Haiku, DeepSeek)','Concurrent request cap per tier (Tier 1: 2 concurrent)'],
- breaks:['Semaphore created at __init__ (no event loop yet) → RuntimeError (FIXED: lazy in __aenter__)','Credit exhaustion not detected (FIXED: real 429 + "credit"/"billing" body check)','_paused=True never cleared if no successful call follows'],
- checks:['Semaphore created inside __aenter__ not __init__','429 response with "credit" or "billing" in body sets _paused=True','Next non-429 response clears _paused','asyncio.wait_for(sem.acquire(), timeout=30) to prevent infinite hang']},
+{id:'rate_limiter',layer:'infra',x:544,y:826,w:158,h:40,label:'api_rate_limiter.py',sublabel:'Semaphore + credit guard',color:'#1a1a2e',
+ file:'core/api_rate_limiter.py',lines:{semaphore:'L1-50',credit_check:'L55-80'},
+ desc:'asyncio.Semaphore (lazy-created). Real DeepSeek 429 detection. _paused on credit exhaustion, clears on success.',
+ impacts:['All LLM API calls','Concurrent request cap'],
+ breaks:['Semaphore at __init__ → RuntimeError (FIXED: lazy)','Credit exhaustion not detected (FIXED)'],
+ checks:['Semaphore created in __aenter__','429+"credit" → _paused=True','Next success clears _paused']},
 
-{id:'token_budget',layer:'infra',label:'core/token_budget.py',sublabel:'Daily USD spend tracking + alert',color:'#1a1a2e',
- file:'core/token_budget.py',
- lines:{record:'L1-60',lock:'L25-30',budget_exceeded:'L55-75',reset:'L80-100'},
- desc:'Tracks daily USD spend per model. FIXED: _daily_usd_spent now uses asyncio.Lock for atomic increment to prevent race conditions under concurrent requests. FIXED: _budget_exceeded_sent flag prevents duplicate budget breach alerts. Lock created lazily (not at class init).',
- impacts:['Cost tracking for all LLM calls — token count × price per token','Dashboard daily_cost and monthly_cost display in /api/analytics/cost'],
- breaks:['Non-atomic += across concurrent coroutines (FIXED: asyncio.Lock)','Duplicate budget breach alerts sent (FIXED: _budget_exceeded_sent flag)','Lock created at __init__ (no loop yet) → RuntimeError (FIXED: _get_lock() lazy)'],
- checks:['_get_lock(): returns existing lock or creates new asyncio.Lock()','record_usage_async(): async with self._get_lock() wraps the += increment','_budget_exceeded_sent reset in _maybe_reset_daily() at midnight','daily_cost in /api/analytics/cost response is non-zero for today']},
+{id:'token_budget',layer:'infra',x:712,y:826,w:158,h:40,label:'token_budget.py',sublabel:'Daily spend + Lock',color:'#1a1a2e',
+ file:'core/token_budget.py',lines:{record:'L1-60',lock:'L25-30'},
+ desc:'Tracks daily USD spend. FIXED: asyncio.Lock for atomic += across concurrent calls. FIXED: _budget_exceeded_sent prevents duplicate alerts.',
+ impacts:['LLM cost tracking','Dashboard daily_cost display'],
+ breaks:['Non-atomic += → race (FIXED: Lock)','Duplicate budget alerts (FIXED: flag)'],
+ checks:['_get_lock() lazy creates Lock','async with lock wraps +=','_budget_exceeded_sent reset at midnight']},
 
-{id:'harry_cache',layer:'infra',label:'core/harry_cache.py',sublabel:'In-memory TTL cache · 3-tuple format',color:'#1a1a2e',
- file:'core/harry_cache.py',
- lines:{push:'L54-59',get:'L62-69',is_fresh:'L77-89',get_fresh:'L92-96'},
- desc:'Canonical in-memory cache for all agent data. push() stores 3-tuples: (data, timestamp, effective_ttl). is_fresh() reads entry[2] for TTL comparison. FIXED: push() uses a local variable for effective_ttl instead of mutating the global TTL dict — prevents TTL drift across calls.',
- impacts:['All 12+ cache keys: finance/gold/silver/weather/email/news/nifty etc.','personal_agent morning briefing reads all keys','Upstream: finance/weather/calendar agents push fresh data'],
- breaks:['TTL mutation bug (FIXED: local var not TTL[key]+=)','2-tuple entries from before upgrade → handled with len(entry)>2 check','Stale entries not evicted → clear_stale() must run hourly'],
- checks:['push(): effective_ttl = int(TTL.get(data_type, 300)) — local copy','is_fresh(): entry[2] for TTL with fallback for 2-tuples','start_cleanup_loop() registered in scheduler','All push() callers: verify agent_name and data_type match expected keys']},
+{id:'harry_cache',layer:'infra',x:880,y:826,w:158,h:40,label:'core/harry_cache.py',sublabel:'TTL cache · 3-tuple format',color:'#1a1a2e',
+ file:'core/harry_cache.py',lines:{push:'L54-59',is_fresh:'L77-89'},
+ desc:'Central in-memory cache. push() stores (data, ts, effective_ttl). FIXED: local effective_ttl var prevents global TTL mutation.',
+ impacts:['All 12+ cache keys','Morning briefing','Agent push/get calls'],
+ breaks:['TTL mutation (FIXED: local var)','2-tuple legacy entries (handled: len check)'],
+ checks:['push() uses local effective_ttl','is_fresh() uses entry[2]','start_cleanup_loop() hourly']},
 
-{id:'scheduler',layer:'scheduler',label:'scheduler.py',sublabel:'APScheduler v3 · 30+ jobs · indentation fix',color:'#134e4a',
- file:'scheduler.py',
- lines:{start_scheduler:'L67-472',d7_offset:'L379',d9_consolidation:'L389',d12_canary:'L396',infra_check:'L418',behavioral_canary:'L437'},
- desc:'APScheduler with CronTrigger (UTC-safe) and IntervalTrigger for all 30+ scheduled jobs. CRITICAL FIX: scheduler.start() and 7 job registrations were accidentally indented inside _e2_behavioral_canary() function body. Extracted to correct scope. D7 outcome feedback offset from 03:00 to 03:30 Saturday to avoid knowledge_decay_weekly collision.',
- impacts:['All scheduled jobs: morning briefings, cache refreshes, maintenance, canary','Morning briefing at 02:30 UTC = 08:00 IST','5-min finance/weather/news cache push jobs'],
- breaks:['scheduler.start() inside wrong function → scheduler never starts (FIXED: correct indent)','D7 + knowledge_decay_weekly at Sat 03:00 → simultaneous LLM calls (FIXED: D7 at 03:30)','DST transitions → CronTrigger timezone="UTC" is immune'],
- checks:['scheduler.start() at 4-space indent inside start_scheduler() — not inside _e2_behavioral_canary','30+ jobs listed in /api/scheduler/jobs','D7 CronTrigger: day_of_week="sat", hour=3, minute=30','AST verify: start_scheduler() body contains scheduler.start()']},
+{id:'scheduler',layer:'scheduler',x:280,y:934,w:440,h:46,label:'scheduler.py',sublabel:'APScheduler v3 · 30+ jobs · indent fix',color:'#134e4a',
+ file:'scheduler.py',lines:{start_scheduler:'L67-472',d7_offset:'L379',infra_check:'L418',behavioral_canary:'L437'},
+ desc:'CRITICAL FIX: scheduler.start() and 7 jobs were trapped inside _e2_behavioral_canary() indentation. D7 outcome feedback → 03:30 to avoid Sat 03:00 knowledge_decay collision.',
+ impacts:['All 30+ scheduled jobs','Morning briefing 02:30 UTC','5-min cache pushes'],
+ breaks:['scheduler.start() inside wrong function (FIXED: correct indent)','D7+decay collision (FIXED: D7 at 03:30)'],
+ checks:['scheduler.start() at 4-space indent','D7 CronTrigger hour=3 minute=30','30+ jobs at /api/scheduler/jobs']},
 
-{id:'dashboard_store',layer:'frontend',label:'genesis-dashboard/store.ts',sublabel:'Zustand store · UiState type · WS event dispatch',color:'#134e4a',
- file:'genesis-dashboard/src/store/store.ts',
- lines:{uiState:'L3',setWsConnected:'L127',handleWsEvent:'L198-250'},
- desc:'Zustand store managing all Genesis HUD state. UiState union type: startup|active|analyzing|listening|alert|critical|offline|standby. FIXED: "normal" was used as UiState in setWsConnected (not a valid member) — now uses "active". All 7 WebSocket event types handled in handleWsEvent.',
- impacts:['All React components reading store state (messages, uiState, health, etc.)','WebSocket event dispatch — store is the central WS handler'],
- breaks:['"normal" is not a valid UiState → TypeScript cast hid the error (FIXED: uses "active")','New WS event type added server-side but not in handleWsEvent → silently dropped','approval_resolved event not triggering lastApprovalUpdate → approval panel stale'],
- checks:['UiState type has exactly 8 valid members (check store.ts L3)','setWsConnected sets "active" not "normal"','handleWsEvent switch covers: log, snapshot, tool_call, kill_switch, chat_message, spoken, approval_resolved','lastApprovalUpdate set on approval_resolved event']},
+{id:'dashboard_store',layer:'frontend',x:60,y:1046,w:185,h:42,label:'store.ts',sublabel:'Zustand · UiState union',color:'#134e4a',
+ file:'genesis-dashboard/src/store/store.ts',lines:{uiState:'L3',handleWsEvent:'L198-250'},
+ desc:'Zustand store. UiState: startup|active|analyzing|listening|alert|critical|offline|standby. FIXED: "normal" replaced with valid "active".',
+ impacts:['All React components','WS event dispatch'],
+ breaks:['"normal" not valid UiState (FIXED: "active")','New WS event not in handleWsEvent → dropped'],
+ checks:['8 valid UiState members','setWsConnected uses "active"','handleWsEvent covers all 7 event types']},
 
-{id:'chat_terminal',layer:'frontend',label:'ChatTerminal.tsx',sublabel:'Main chat UI · streaming · ref cleanup',color:'#134e4a',
- file:'genesis-dashboard/src/components/v2/ChatTerminal.tsx',
- lines:{refs:'L114-119',unmount_cleanup:'L429-437',streaming:'L140-145',abort:'L201-225'},
- desc:'Primary chat interface component. Handles streaming token display, voice mode coordination, toast notifications, and TTS playback state. FIXED: unmount useEffect now cancels rafRef (cancelAnimationFrame), clears toastTimerRef (clearTimeout), and aborts abortRef (.abort()) to prevent post-unmount side-effects.',
- impacts:['WebSocket streaming display in dashboard','Voice mode UI state coordination with useVoice','TTS playback start/stop events'],
- breaks:['rafRef leaked → orphaned rAF callbacks running after component unmount (FIXED)','toastTimerRef leaked → toast fires after unmount into unmounted component (FIXED)','abortRef leaked → fetch request not cancelled on navigation away (FIXED)'],
- checks:['useEffect(() => () => {...}, []) cleanup at L429 is present','cancelAnimationFrame(rafRef.current) in cleanup','clearTimeout(toastTimerRef.current) in cleanup','abortRef.current?.abort() in cleanup']},
+{id:'chat_terminal',layer:'frontend',x:255,y:1046,w:185,h:42,label:'ChatTerminal.tsx',sublabel:'Chat UI · ref cleanup',color:'#134e4a',
+ file:'genesis-dashboard/src/components/v2/ChatTerminal.tsx',lines:{refs:'L114-119',unmount_cleanup:'L429-437'},
+ desc:'Primary chat UI. FIXED: unmount useEffect cancels rafRef (cancelAnimationFrame), toastTimerRef (clearTimeout), abortRef (.abort()).',
+ impacts:['WS streaming display','Voice mode coordination'],
+ breaks:['rafRef leak post-unmount (FIXED)','toastTimerRef fires after unmount (FIXED)','abortRef fetch not cancelled (FIXED)'],
+ checks:['useEffect cleanup at L429','cancelAnimationFrame(rafRef.current)','abortRef.current?.abort()']},
 
-{id:'use_voice',layer:'frontend',label:'useVoice.ts',sublabel:'Wake-word · PTT · silenceTimer ref · Chrome permission chain',color:'#134e4a',
- file:'genesis-dashboard/src/lib/useVoice.ts',
- lines:{silence_timer_ref:'L60',cleanup:'L137-144',wake_rec:'L150-270',heartbeat:'L313-328'},
- desc:'Voice recognition hook managing wake-word detection ("Harry"/"hey Harry") and push-to-talk. silenceTimer FIXED: promoted from local variable to useRef so it can be cleared on unmount. Chrome permission chain preserved by reusing the same SpeechRecognition instance (not creating new ones) via onend restart pattern.',
- impacts:['Wake-word "Harry" → wakeword detection in production','Push-to-talk (Space key) recording','Silence-triggered command delivery (3s after command audio stops)'],
- breaks:['silenceTimer as local var → fires after unmount into unmounted component (FIXED: now silenceTimerRef.current)','hearingTimer not cleared on unmount (FIXED: clearTimeout in cleanup)','Creating new SpeechRecognition in onend → loses Chrome permission chain → silent failures'],
- checks:['silenceTimerRef declared with useRef at L60','silenceTimerRef.current cleared in cleanup useEffect at L139','hearingTimer.current cleared in same cleanup','wakeRecRef reused in onend (same instance, not new SR())']},
+{id:'use_voice',layer:'frontend',x:450,y:1046,w:185,h:42,label:'useVoice.ts',sublabel:'Wake-word · silenceTimer ref',color:'#134e4a',
+ file:'genesis-dashboard/src/lib/useVoice.ts',lines:{silence_timer_ref:'L60',cleanup:'L137-144'},
+ desc:'Wake-word "Harry" + PTT. FIXED: silenceTimer → silenceTimerRef. Chrome permission chain: reuse same SpeechRecognition instance.',
+ impacts:['Wake-word detection','PTT recording','Silence-triggered delivery'],
+ breaks:['silenceTimer local → fires after unmount (FIXED: ref)','hearingTimer not cleared (FIXED)'],
+ checks:['silenceTimerRef.current cleared in cleanup L139','Same SR instance reused in onend']},
 
-{id:'markdown_tsx',layer:'frontend',label:'Markdown.tsx',sublabel:'XSS guard · HTML→Markdown · memoized',color:'#134e4a',
- file:'genesis-dashboard/src/components/v2/Markdown.tsx',
- lines:{href_guard:'L38',html_to_md:'L10-24'},
- desc:'Memoized markdown renderer for all agent responses. Converts Telegram HTML (bold/italic/code/links) to markdown first, then renders via react-markdown. FIXED: href attribute now only renders if it matches /^https?:\\/\\// — prevents javascript: XSS from agent-generated links. All others replaced with "#".',
- impacts:['All agent response rendering in the dashboard chat panel'],
- breaks:['javascript: href from agent output rendered as clickable link (FIXED: regex guard)','Raw <script> tags in agent response rendered as HTML (htmlToMarkdown must strip)','Markdown double-rendering artifacts if already-markdown input passed'],
- checks:['href?.match(/^https?:\\/\\//) check at L38','<script> and <iframe> stripped by htmlToMarkdown','memo() wrapping prevents re-renders on parent state changes','Code blocks render with syntax highlighting if highlighter installed']},
+{id:'markdown_tsx',layer:'frontend',x:645,y:1046,w:185,h:42,label:'Markdown.tsx',sublabel:'XSS guard · href filter',color:'#134e4a',
+ file:'genesis-dashboard/src/components/v2/Markdown.tsx',lines:{href_guard:'L38'},
+ desc:'Memoized markdown renderer. FIXED: href only renders if matches /^https?:\\/\\// — prevents javascript: XSS from agent output.',
+ impacts:['All response rendering in dashboard'],
+ breaks:['javascript: href XSS from agent (FIXED: regex)','<script> not stripped → raw HTML'],
+ checks:['href?.match(/^https?:\\/\\//) at L38','htmlToMarkdown strips <script>']},
 ];
 
 const EDGES=[
-  {from:'telegram',to:'harry_main',label:'every message'},
+  {from:'telegram',to:'harry_main',label:'every msg'},
   {from:'dashboard_api',to:'harry_main',label:'POST /api/chat'},
   {from:'websocket',to:'dashboard_api',label:'WS events'},
-  {from:'harry_main',to:'cognitive_flow',label:'CognitiveFlow.process()'},
-  {from:'cognitive_flow',to:'routing_engine',label:'classify intent'},
-  {from:'routing_engine',to:'semantic_router',label:'L1.5 embed'},
-  {from:'routing_engine',to:'intent_chain',label:'B3 chain check'},
-  {from:'routing_engine',to:'bandit_router',label:'B1 UCB1 tiebreak'},
-  {from:'cognitive_flow',to:'reflection_engine',label:'A1+F33 async'},
-  {from:'cognitive_flow',to:'contradiction_detector',label:'A2 check'},
-  {from:'cognitive_flow',to:'self_consistency',label:'A4 if high-stakes'},
-  {from:'cognitive_flow',to:'error_taxonomy',label:'A3 on error'},
-  {from:'routing_engine',to:'finance_agent',label:'finance routing'},
-  {from:'routing_engine',to:'code_agent',label:'code routing'},
-  {from:'routing_engine',to:'personal_agent',label:'personal routing'},
-  {from:'routing_engine',to:'other_agents',label:'24 more agents'},
-  {from:'routing_engine',to:'memory_agent',label:'memory ops'},
+  {from:'harry_main',to:'cognitive_flow',label:'process()'},
+  {from:'cognitive_flow',to:'routing_engine',label:'L1 classify'},
+  {from:'routing_engine',to:'semantic_router',label:'L1.5'},
+  {from:'routing_engine',to:'intent_chain',label:'B3'},
+  {from:'routing_engine',to:'bandit_router',label:'B1 UCB1'},
+  {from:'cognitive_flow',to:'reflection_engine',label:'A1+F33'},
+  {from:'cognitive_flow',to:'contradiction_detector',label:'A2'},
+  {from:'cognitive_flow',to:'self_consistency',label:'A4'},
+  {from:'cognitive_flow',to:'error_taxonomy',label:'A3'},
+  {from:'routing_engine',to:'finance_agent',label:'finance'},
+  {from:'routing_engine',to:'code_agent',label:'code'},
+  {from:'routing_engine',to:'personal_agent',label:'personal'},
+  {from:'routing_engine',to:'other_agents',label:'24 agents'},
+  {from:'routing_engine',to:'memory_agent',label:'memory'},
   {from:'finance_agent',to:'finance_int',label:'price APIs'},
-  {from:'other_agents',to:'gmail_int',label:'email ops'},
-  {from:'harry_main',to:'tts_int',label:'voice synthesis'},
-  {from:'cognitive_flow',to:'tool_dispatcher',label:'D11 tools'},
-  {from:'cognitive_flow',to:'database',label:'trace + logs'},
-  {from:'harry_main',to:'harry_cache',label:'push / get'},
+  {from:'other_agents',to:'gmail_int',label:'email'},
+  {from:'harry_main',to:'tts_int',label:'voice'},
+  {from:'cognitive_flow',to:'tool_dispatcher',label:'D11'},
+  {from:'cognitive_flow',to:'database',label:'trace+logs'},
+  {from:'harry_main',to:'harry_cache',label:'push/get'},
   {from:'finance_agent',to:'harry_cache',label:'push finance'},
   {from:'harry_main',to:'auth',label:'PIN verify'},
   {from:'finance_int',to:'circuit_breaker',label:'wrapped'},
   {from:'gmail_int',to:'circuit_breaker',label:'wrapped'},
   {from:'cognitive_flow',to:'rate_limiter',label:'LLM calls'},
   {from:'cognitive_flow',to:'token_budget',label:'record cost'},
-  {from:'scheduler',to:'finance_int',label:'5min cache push'},
-  {from:'scheduler',to:'knowledge_decay',label:'weekly decay'},
-  {from:'scheduler',to:'canary',label:'30min canary'},
-  {from:'websocket',to:'dashboard_store',label:'WS event dispatch'},
-  {from:'dashboard_store',to:'chat_terminal',label:'messages state'},
+  {from:'scheduler',to:'finance_int',label:'5min push'},
+  {from:'scheduler',to:'knowledge_decay',label:'weekly'},
+  {from:'scheduler',to:'canary',label:'30min'},
+  {from:'websocket',to:'dashboard_store',label:'WS dispatch'},
+  {from:'dashboard_store',to:'chat_terminal',label:'messages'},
   {from:'dashboard_store',to:'use_voice',label:'voice state'},
-  {from:'chat_terminal',to:'markdown_tsx',label:'render responses'},
+  {from:'chat_terminal',to:'markdown_tsx',label:'render'},
 ];
 
-// ── Render sidebar ────────────────────────────────────────────────────────────
-let activeId = null;
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(t) {
+  document.getElementById('view-explorer').style.display = t==='explorer' ? 'flex' : 'none';
+  document.getElementById('view-flow').style.display     = t==='flow'     ? 'flex' : 'none';
+  document.getElementById('tab-explorer').classList.toggle('active', t==='explorer');
+  document.getElementById('tab-flow').classList.toggle('active', t==='flow');
+}
+
+// ── Shared detail renderer ────────────────────────────────────────────────────
+function renderDetail(n, targetBody, targetHero) {
+  const layer = LAYERS.find(l => l.id === n.layer);
+
+  if (targetHero) {
+    document.getElementById('dp-file').textContent    = n.file;
+    document.getElementById('dp-name').textContent    = n.label;
+    document.getElementById('dp-sub').textContent     = n.sublabel;
+    document.getElementById('dp-desc').textContent    = n.desc;
+    const badge = document.getElementById('dp-badge');
+    badge.textContent   = layer?.label || n.layer;
+    badge.style.cssText = `color:${layer?.color};border-color:${layer?.color}22;background:${layer?.color}11`;
+    document.getElementById('dp-hero').style.display  = '';
+    document.getElementById('dp-body').style.display  = '';
+    document.getElementById('dp-placeholder2') && (document.getElementById('dp-placeholder2').style.display='none');
+  }
+
+  targetBody.innerHTML = '';
+
+  // Lines
+  if (n.lines && Object.keys(n.lines).length) {
+    targetBody.appendChild(mkCard('Key Lines', layer?.color, `
+      ${Object.entries(n.lines).map(([k,v])=>`
+        <div class="line-row">
+          <div class="lk">${k}</div>
+          <span class="lb" title="Copy ${n.file}:${v}" onclick="navigator.clipboard.writeText('${n.file}:${v}')">${v} ⎘</span>
+        </div>`).join('')}`));
+  }
+
+  // Impacts
+  if (n.impacts?.length) {
+    targetBody.appendChild(mkCard('Impacts', '#3b82f6',
+      n.impacts.map(i=>`<div class="ii">${i}</div>`).join('')));
+  }
+
+  // Breaks
+  if (n.breaks?.length) {
+    targetBody.appendChild(mkCard('Break Points', '#ef4444',
+      n.breaks.map(b=>`
+        <div class="bi ${b.includes('FIXED')?'fixed':'risk'}">
+          <div class="bs ${b.includes('FIXED')?'ok':'warn'}">${b.includes('FIXED')?'FIXED':'RISK'}</div>
+          <div class="bt">${b}</div>
+        </div>`).join('')));
+  }
+
+  // Checks
+  if (n.checks?.length) {
+    targetBody.appendChild(mkCard('Debug Checklist', '#a78bfa',
+      n.checks.map((c,i)=>`
+        <div class="ci"><div class="cn">${i+1}.</div><div class="ct">${c}</div></div>`).join('')));
+  }
+
+  // Connections
+  const out = EDGES.filter(e=>e.from===n.id);
+  const inn = EDGES.filter(e=>e.to===n.id);
+  if (out.length||inn.length) {
+    targetBody.appendChild(mkCard('Connections', '#22c55e', `
+      ${out.length?`<div style="font-size:9px;color:#3b82f6;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">→ calls out</div>
+        ${out.map(e=>{const t=NODES.find(x=>x.id===e.to);return`<div class="conn-item" onclick="jumpTo('${e.to}')">
+          <div class="conn-arrow" style="color:#3b82f6">→</div>
+          <div class="conn-name">${t?.label||e.to}</div>
+          <div class="conn-lbl">${e.label}</div>
+        </div>`;}).join('')}`:''}
+      ${inn.length?`<div style="font-size:9px;color:#22c55e;letter-spacing:1px;text-transform:uppercase;margin:8px 0 6px">← receives from</div>
+        ${inn.map(e=>{const s=NODES.find(x=>x.id===e.from);return`<div class="conn-item" onclick="jumpTo('${e.from}')">
+          <div class="conn-arrow" style="color:#22c55e">←</div>
+          <div class="conn-name">${s?.label||e.from}</div>
+          <div class="conn-lbl">${e.label}</div>
+        </div>`;}).join('')}`:''}
+    `));
+  }
+}
+
+function mkCard(title, color, html) {
+  const d = document.createElement('div');
+  d.className = 'dc';
+  d.innerHTML = `<div class="dc-hdr"><div class="dc-dot" style="background:${color||'#3b82f6'}"></div>${title}</div><div class="dc-body">${html}</div>`;
+  return d;
+}
+
+function jumpTo(id) {
+  // If in flow view, select in flow; if in explorer, select in explorer
+  const inFlow = document.getElementById('view-flow').style.display !== 'none';
+  if (inFlow) { highlightFlowNode(id); showFlowDetail(id); }
+  else { selectExplorerNode(id); }
+}
+
+// ── EXPLORER ──────────────────────────────────────────────────────────────────
+let exActive = null;
 
 function renderSidebar(query='') {
-  const list = document.getElementById('sidebar-list');
+  const list = document.getElementById('ex-sidebar');
   list.innerHTML = '';
   const q = query.toLowerCase();
   LAYERS.forEach(layer => {
-    const nodes = NODES.filter(n => n.layer === layer.id);
-    const matched = q ? nodes.filter(n =>
-      n.label.toLowerCase().includes(q) ||
-      n.sublabel.toLowerCase().includes(q) ||
-      n.file.toLowerCase().includes(q) ||
-      n.desc.toLowerCase().includes(q)
+    const nodes = NODES.filter(n=>n.layer===layer.id);
+    const matched = q ? nodes.filter(n=>
+      n.label.toLowerCase().includes(q)||n.sublabel.toLowerCase().includes(q)||
+      n.file.toLowerCase().includes(q)||n.desc.toLowerCase().includes(q)
     ) : nodes;
     if (!matched.length) return;
-
     const grp = document.createElement('div');
-    grp.className = 'layer-group' + (q || activeId && nodes.some(n=>n.id===activeId) ? ' open' : ' open');
-    grp.innerHTML = `
-      <div class="layer-hdr">
-        <div class="layer-hdr-dot" style="background:${layer.color}"></div>
-        <div class="layer-hdr-label">${layer.label}</div>
-        <div class="layer-hdr-count">${matched.length}</div>
-        <div class="layer-hdr-arrow">›</div>
-      </div>
-      <div class="layer-nodes"></div>`;
-    grp.querySelector('.layer-hdr').addEventListener('click', () => {
-      grp.classList.toggle('open');
-    });
-    const nodesDiv = grp.querySelector('.layer-nodes');
-    matched.forEach(n => {
+    grp.className = 'lg open';
+    grp.innerHTML = `<div class="lg-hdr">
+      <div class="lg-dot" style="background:${layer.color}"></div>
+      <div class="lg-label">${layer.label}</div>
+      <div class="lg-count">${matched.length}</div>
+      <div class="lg-arrow">›</div>
+    </div><div class="lg-nodes"></div>`;
+    grp.querySelector('.lg-hdr').addEventListener('click',()=>grp.classList.toggle('open'));
+    const nd = grp.querySelector('.lg-nodes');
+    matched.forEach(n=>{
       const item = document.createElement('div');
-      item.className = 'node-item' + (n.id === activeId ? ' active' : '') + (q ? ' match' : '');
+      item.className = 'ni'+(n.id===exActive?' active':'')+(q?' match':'');
       item.dataset.id = n.id;
-      item.innerHTML = `
-        <div class="node-dot" style="background:${layer.color}"></div>
-        <div class="node-name">${n.label}</div>`;
-      item.addEventListener('click', () => selectNode(n.id));
-      nodesDiv.appendChild(item);
+      item.innerHTML = `<div class="ni-dot" style="background:${layer.color}"></div><div class="ni-name">${n.label}</div>`;
+      item.addEventListener('click',()=>selectExplorerNode(n.id));
+      nd.appendChild(item);
     });
     list.appendChild(grp);
   });
 }
 
-// ── Select node ───────────────────────────────────────────────────────────────
-function selectNode(id) {
-  activeId = id;
-  const n = NODES.find(x => x.id === id);
+function selectExplorerNode(id) {
+  exActive = id;
+  const n = NODES.find(x=>x.id===id);
   if (!n) return;
   renderSidebar(document.getElementById('search-input').value);
-
-  document.getElementById('welcome').style.display = 'none';
-  const dc = document.getElementById('detail-content');
+  document.getElementById('dp-placeholder').style.display = 'none';
+  const dc = document.getElementById('ex-dc');
   dc.style.display = 'block';
 
-  const layer = LAYERS.find(l => l.id === n.layer);
-  document.getElementById('dc-file').textContent = n.file;
-  document.getElementById('dc-name').textContent = n.label;
-  document.getElementById('dc-sublabel').textContent = n.sublabel;
-  document.getElementById('dc-desc').textContent = n.desc;
-  const badge = document.getElementById('dc-badge');
-  badge.textContent = layer?.label || n.layer;
-  badge.style.cssText = `color:${layer?.color};border-color:${layer?.color}22;background:${layer?.color}11`;
-
-  const body = document.getElementById('dc-body');
-  body.innerHTML = '';
-
-  // Card: Key Lines
-  if (n.lines && Object.keys(n.lines).length) {
-    body.appendChild(card('Key Lines', layer?.color, `
-      <div class="lines-grid">
-        ${Object.entries(n.lines).map(([k,v]) => `
-          <div class="line-row">
-            <div class="line-key">${k}</div>
-            <span class="line-badge" onclick="navigator.clipboard.writeText('${n.file}:${v}')">${v} ⎘</span>
-          </div>`).join('')}
-      </div>
-    `));
+  const layer = LAYERS.find(l=>l.id===n.layer);
+  // Hero in explorer
+  let hero = document.getElementById('ex-hero');
+  if (!hero) {
+    hero = document.createElement('div');
+    hero.id = 'ex-hero';
+    hero.style.cssText = 'padding:20px 24px 16px;border-bottom:1px solid #0f1e3a;background:#060d20;flex-shrink:0';
+    dc.insertBefore(hero, dc.firstChild);
   }
+  hero.innerHTML = `
+    <div style="font-size:11px;color:#3b82f6;font-family:monospace;margin-bottom:3px">${n.file}</div>
+    <div style="font-size:17px;font-weight:700;color:#e2e8f0;margin-bottom:6px">${n.label}</div>
+    <span class="layer-badge" style="color:${layer?.color};border-color:${layer?.color}22;background:${layer?.color}11">${layer?.label||n.layer}</span>
+    <div style="font-size:10px;color:#475569;margin-bottom:10px">${n.sublabel}</div>
+    <div style="font-size:10px;color:#94a3b8;line-height:1.7">${n.desc}</div>`;
 
-  // Card: Impacts
-  if (n.impacts?.length) {
-    body.appendChild(card('Impacts — what changing this affects', '#3b82f6', `
-      <div class="impact-list">
-        ${n.impacts.map(i => `<div class="impact-item">${i}</div>`).join('')}
-      </div>
-    `));
+  let body = document.getElementById('ex-body');
+  if (!body) {
+    body = document.createElement('div');
+    body.id = 'ex-body';
+    body.style.cssText = 'padding:14px 16px';
+    dc.appendChild(body);
   }
-
-  // Card: Breaks
-  if (n.breaks?.length) {
-    body.appendChild(card('Known Break Points', '#ef4444', `
-      ${n.breaks.map(b => `
-        <div class="break-item ${b.includes('FIXED') ? 'fixed' : 'unfixed'}">
-          <div class="break-status ${b.includes('FIXED') ? 'ok' : 'warn'}">${b.includes('FIXED') ? 'FIXED' : 'RISK'}</div>
-          <div class="break-text">${b.replace(/\(FIXED[^)]*\)/g, '<span style="color:#4ade80;font-size:9px">$&</span>')}</div>
-        </div>`).join('')}
-    `));
-  }
-
-  // Card: Debug Checklist
-  if (n.checks?.length) {
-    body.appendChild(card('Debug Checklist', '#a78bfa', `
-      ${n.checks.map((c,i) => `
-        <div class="check-item">
-          <div class="check-num">${i+1}.</div>
-          <div class="check-text">${c}</div>
-        </div>`).join('')}
-    `));
-  }
-
-  // Card: Connections
-  const callsOut = EDGES.filter(e => e.from === id);
-  const callsIn  = EDGES.filter(e => e.to   === id);
-  if (callsOut.length || callsIn.length) {
-    body.appendChild(card('Connections', '#22c55e', `
-      ${callsOut.length ? `
-        <div class="conn-section">
-          <div class="conn-label conn-calls">→ calls out</div>
-          ${callsOut.map(e => {
-            const t = NODES.find(x=>x.id===e.to);
-            return `<div class="conn-item" onclick="selectNode('${e.to}')">
-              <div class="conn-item-arrow" style="color:#3b82f6">→</div>
-              <div class="conn-item-name">${t?.label||e.to}</div>
-              <div class="conn-item-label">${e.label}</div>
-            </div>`;
-          }).join('')}
-        </div>` : ''}
-      ${callsIn.length ? `
-        <div class="conn-section">
-          <div class="conn-label conn-from">← receives from</div>
-          ${callsIn.map(e => {
-            const s = NODES.find(x=>x.id===e.from);
-            return `<div class="conn-item" onclick="selectNode('${e.from}')">
-              <div class="conn-item-arrow" style="color:#22c55e">←</div>
-              <div class="conn-item-name">${s?.label||e.from}</div>
-              <div class="conn-item-label">${e.label}</div>
-            </div>`;
-          }).join('')}
-        </div>` : ''}
-    `));
-  }
-
-  // Scroll to top
-  document.getElementById('detail').scrollTop = 0;
+  renderDetail(n, body, false);
+  document.getElementById('ex-detail').scrollTop = 0;
 }
 
-function card(title, color, contentHtml) {
-  const d = document.createElement('div');
-  d.className = 'dc-card';
-  d.innerHTML = `
-    <div class="dc-card-hdr">
-      <div class="dc-card-hdr-dot" style="background:${color||'#3b82f6'}"></div>
-      ${title}
-    </div>
-    <div class="dc-card-body">${contentHtml}</div>`;
-  return d;
-}
-
-// ── Search ────────────────────────────────────────────────────────────────────
 document.getElementById('search-input').addEventListener('input', e => {
   renderSidebar(e.target.value.trim());
 });
 
-// ── Auth gate ─────────────────────────────────────────────────────────────────
+// ── FLOW CHART ────────────────────────────────────────────────────────────────
+const SVG_NS = 'http://www.w3.org/2000/svg';
+const svg = document.getElementById('fc');
+function svgEl(tag, attrs={}) {
+  const e = document.createElementNS(SVG_NS, tag);
+  for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+  return e;
+}
+
+const defs = svgEl('defs');
+const mkr = svgEl('marker',{id:'arr',markerWidth:'8',markerHeight:'8',refX:'6',refY:'3',orient:'auto'});
+mkr.appendChild(svgEl('path',{d:'M0,0 L0,6 L8,3 z',fill:'#1e3060'}));
+const mkr2 = svgEl('marker',{id:'arr-hi',markerWidth:'8',markerHeight:'8',refX:'6',refY:'3',orient:'auto'});
+mkr2.appendChild(svgEl('path',{d:'M0,0 L0,6 L8,3 z',fill:'#3b82f6'}));
+defs.appendChild(mkr); defs.appendChild(mkr2);
+svg.appendChild(defs);
+
+// Layer background bands
+const LAYER_Y = {entry:30,master:145,pipeline:255,routing:370,intelligence:480,agents:590,integrations:698,infra:806,scheduler:914,frontend:1026};
+for (const [lid, ly] of Object.entries(LAYER_Y)) {
+  const layer = LAYERS.find(l=>l.id===lid);
+  const bg = svgEl('rect',{x:0,y:ly-12,width:1400,height:16,fill:layer?.color||'#333',opacity:'0.07'});
+  svg.insertBefore(bg, svg.firstChild);
+  const lbl = svgEl('text',{x:8,y:ly-1,'font-size':'8','font-weight':'700',fill:layer?.color||'#ccc','font-family':'JetBrains Mono,monospace','letter-spacing':'1.5',opacity:'0.6'});
+  lbl.textContent = '// ' + (layer?.label||lid).toUpperCase();
+  svg.appendChild(lbl);
+}
+
+const edgeGroup = svgEl('g',{id:'edges'});
+const nodeGroup = svgEl('g',{id:'fnodes'});
+svg.appendChild(edgeGroup);
+svg.appendChild(nodeGroup);
+
+const edgeEls = {};
+for (const e of EDGES) {
+  const f = NODES.find(n=>n.id===e.from), t = NODES.find(n=>n.id===e.to);
+  if (!f||!t) continue;
+  const fx=f.x+f.w/2, fy=f.y+f.h, tx=t.x+t.w/2, ty=t.y, my=(fy+ty)/2;
+  const g = svgEl('g',{'data-from':e.from,'data-to':e.to});
+  const path = svgEl('path',{d:`M${fx},${fy} C${fx},${my} ${tx},${my} ${tx},${ty}`,stroke:'#1e3060',fill:'none','stroke-width':'1.2','marker-end':'url(#arr)'});
+  g.appendChild(path);
+  if (e.label) {
+    const lbl = svgEl('text',{x:(fx+tx)/2,y:(fy+ty)/2,'text-anchor':'middle',fill:'#1e3a60','font-size':'7.5','font-family':'JetBrains Mono,monospace'});
+    lbl.textContent = e.label;
+    g.appendChild(lbl);
+  }
+  edgeGroup.appendChild(g);
+  [e.from,e.to].forEach(id=>{
+    if (!edgeEls[id]) edgeEls[id]=[];
+    edgeEls[id].push({g,path});
+  });
+}
+
+const flowNodeEls = {};
+for (const n of NODES) {
+  const g = svgEl('g',{class:'fnode','data-id':n.id,transform:`translate(${n.x},${n.y})`});
+  const bg = svgEl('rect',{class:'fnbg',width:n.w,height:n.h,rx:5,fill:n.color,stroke:'#1e2d50','stroke-width':'1'});
+  g.appendChild(bg);
+  const txt = svgEl('text',{x:n.w/2,y:n.h/2-5,'text-anchor':'middle',fill:'#e2e8f0','font-size':'9.5','font-weight':'700','font-family':'JetBrains Mono,monospace',class:'fntext'});
+  txt.textContent = n.label;
+  g.appendChild(txt);
+  const sub = svgEl('text',{x:n.w/2,y:n.h/2+8,'text-anchor':'middle',fill:'#94a3b8','font-size':'8','font-family':'JetBrains Mono,monospace',class:'fntext'});
+  sub.textContent = n.sublabel;
+  g.appendChild(sub);
+  g.addEventListener('click',()=>{ highlightFlowNode(n.id); showFlowDetail(n.id); });
+  nodeGroup.appendChild(g);
+  flowNodeEls[n.id] = {g,bg};
+}
+
+function highlightFlowNode(id) {
+  const connected = new Set([id]);
+  for (const e of EDGES) { if(e.from===id) connected.add(e.to); if(e.to===id) connected.add(e.from); }
+  for (const [nid,{g}] of Object.entries(flowNodeEls)) {
+    g.classList.toggle('hl', nid===id);
+    g.classList.toggle('dim', !connected.has(nid));
+  }
+  for (const [,arr] of Object.entries(edgeEls)) {
+    arr.forEach(({g:eg,path})=>{
+      const isConn = EDGES.some(e=>(e.from===id||e.to===id)&&eg.dataset.from===e.from&&eg.dataset.to===e.to);
+      path.setAttribute('stroke', isConn?'#3b82f6':'#0f1830');
+      path.setAttribute('marker-end', isConn?'url(#arr-hi)':'url(#arr)');
+      eg.style.opacity = isConn?'1':'0.15';
+    });
+  }
+}
+
+function showFlowDetail(id) {
+  const n = NODES.find(x=>x.id===id); if(!n) return;
+  document.getElementById('dp-placeholder2') && (document.getElementById('dp-placeholder2').style.display='none');
+  document.getElementById('dp-hero').style.display = '';
+  document.getElementById('dp-body').style.display = '';
+  renderDetail(n, document.getElementById('dp-body'), true);
+  document.getElementById('detail-pane').querySelector('#dp-body').scrollTop = 0;
+}
+
+// Pan + zoom
+let vb = {x:-10,y:-10,w:1420,h:1120};
+let drag=false, lx=0, ly_=0;
+const canvas = document.getElementById('flow-canvas');
+function applyVB(){ svg.setAttribute('viewBox',`${vb.x} ${vb.y} ${vb.w} ${vb.h}`); }
+applyVB();
+svg.addEventListener('mousedown',e=>{ if(e.target.closest('.fnode')) return; drag=true; lx=e.clientX; ly_=e.clientY; });
+window.addEventListener('mouseup',()=>drag=false);
+window.addEventListener('mousemove',e=>{
+  if(!drag) return;
+  vb.x-=(e.clientX-lx)/canvas.clientWidth*vb.w;
+  vb.y-=(e.clientY-ly_)/canvas.clientHeight*vb.h;
+  lx=e.clientX; ly_=e.clientY; applyVB();
+});
+svg.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const f=e.deltaY>0?1.1:.91;
+  const cx=vb.x+(e.offsetX/canvas.clientWidth)*vb.w;
+  const cy=vb.y+(e.offsetY/canvas.clientHeight)*vb.h;
+  vb.w*=f; vb.h*=f;
+  vb.x=cx-(e.offsetX/canvas.clientWidth)*vb.w;
+  vb.y=cy-(e.offsetY/canvas.clientHeight)*vb.h;
+  applyVB();
+},{passive:false});
+document.getElementById('fc-in').onclick=()=>{vb.w*=.8;vb.h*=.8;applyVB()};
+document.getElementById('fc-out').onclick=()=>{vb.w*=1.25;vb.h*=1.25;applyVB()};
+document.getElementById('fc-fit').onclick=()=>{vb={x:-10,y:-10,w:1420,h:1120};applyVB()};
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
 (function(){
-  // SHA-256 of PIN "harry2026"
-  const HASH = "dd7183eb07b6aeb1fe723cf93237dc988ab0ea9fe8a9895e559c8b532d2f46b0";
-
-  async function sha256(str){
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const HASH="dd7183eb07b6aeb1fe723cf93237dc988ab0ea9fe8a9895e559c8b532d2f46b0";
+  async function sha256(s){
+    const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
   }
-
-  const gate  = document.getElementById('auth-gate');
-  const input = document.getElementById('auth-input');
-  const btn   = document.getElementById('auth-btn');
-  const err   = document.getElementById('auth-error');
-
-  if (sessionStorage.getItem('harry_auth') === '1') {
-    gate.style.display = 'none';
-    return;
-  }
-
-  let attempts = 0;
+  const gate=document.getElementById('auth-gate'),inp=document.getElementById('auth-in'),
+        btn=document.getElementById('auth-btn'),err=document.getElementById('auth-err');
+  if(sessionStorage.getItem('harry_auth')==='1'){gate.style.display='none';return;}
+  let att=0;
   async function tryUnlock(){
-    const pin = input.value.trim();
-    if (!pin) return;
-    const h = await sha256(pin);
-    if (h === HASH) {
+    const pin=inp.value.trim(); if(!pin) return;
+    const h=await sha256(pin);
+    if(h===HASH){
       sessionStorage.setItem('harry_auth','1');
-      gate.style.opacity = '0';
-      gate.style.transition = 'opacity 0.4s';
-      setTimeout(() => gate.style.display='none', 420);
+      gate.style.opacity='0'; gate.style.transition='opacity .4s';
+      setTimeout(()=>gate.style.display='none',420);
     } else {
-      attempts++;
-      err.textContent = attempts >= 3
-        ? `Incorrect PIN (attempt ${attempts})`
-        : 'Incorrect PIN';
-      input.value = '';
-      input.classList.remove('shake');
-      void input.offsetWidth;
-      input.classList.add('shake');
-      setTimeout(() => input.classList.remove('shake'), 400);
+      att++;
+      err.textContent=att>=3?`Incorrect PIN (attempt ${att})`:'Incorrect PIN';
+      inp.value=''; inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+      setTimeout(()=>inp.classList.remove('shake'),400);
     }
   }
-
-  btn.addEventListener('click', tryUnlock);
-  input.addEventListener('keydown', e => { if(e.key==='Enter') tryUnlock(); });
+  btn.addEventListener('click',tryUnlock);
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryUnlock();});
 })();
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 renderSidebar();
-document.getElementById('stat-modules').textContent = NODES.length;
-document.getElementById('stat-layers').textContent  = LAYERS.length;
-document.getElementById('stat-edges').textContent   = EDGES.length;
+selectExplorerNode('harry_main');  // auto-select on load
 </script>
 </body>
 </html>
