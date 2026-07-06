@@ -7,6 +7,37 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#04081c;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:11px;overflow:hidden}
+
+/* ── Auth gate ── */
+#auth-gate{
+  position:fixed;inset:0;background:#04081c;z-index:9999;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;
+}
+#auth-box{
+  background:#080f22;border:1px solid #1e3060;border-radius:12px;
+  padding:40px 48px;display:flex;flex-direction:column;align-items:center;gap:20px;
+  box-shadow:0 0 40px rgba(59,130,246,0.12);
+}
+#auth-logo{font-size:28px;letter-spacing:4px;color:#3b82f6;font-weight:700;text-shadow:0 0 20px rgba(59,130,246,0.6);}
+#auth-subtitle{font-size:10px;color:#475569;letter-spacing:2px;text-transform:uppercase;margin-top:-10px;}
+#auth-label{font-size:10px;color:#64748b;letter-spacing:1px;text-transform:uppercase;align-self:flex-start;}
+#auth-input{
+  background:#04081c;border:1px solid #1e3060;color:#e2e8f0;
+  padding:10px 16px;border-radius:6px;font-family:inherit;font-size:14px;
+  width:220px;letter-spacing:4px;text-align:center;outline:none;
+  transition:border-color 0.2s;
+}
+#auth-input:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,0.15);}
+#auth-input.shake{animation:shake 0.35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#auth-btn{
+  background:#1e3a8a;color:#93c5fd;border:1px solid #2563eb;border-radius:6px;
+  padding:8px 32px;font-family:inherit;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:background 0.15s;width:100%;
+}
+#auth-btn:hover{background:#2563eb;color:#fff;}
+#auth-error{font-size:10px;color:#ef4444;letter-spacing:1px;min-height:14px;}
+#auth-hint{font-size:9px;color:#334155;letter-spacing:1px;}
 #app{display:flex;height:100vh;width:100vw}
 #sidebar{width:280px;min-width:280px;background:#080f22;border-right:1px solid #1e2d50;display:flex;flex-direction:column;overflow:hidden}
 #search-box{padding:10px;border-bottom:1px solid #1e2d50}
@@ -67,6 +98,18 @@ svg#flowchart{width:100%;height:100%}
 </style>
 </head>
 <body>
+<!-- ── Auth gate overlay ── -->
+<div id="auth-gate">
+  <div id="auth-box">
+    <div id="auth-logo">HARRY</div>
+    <div id="auth-subtitle">Agent OS · Architecture</div>
+    <div id="auth-label">Access PIN</div>
+    <input id="auth-input" type="password" maxlength="12" placeholder="••••••" autocomplete="off" autofocus>
+    <div id="auth-error"></div>
+    <button id="auth-btn">UNLOCK</button>
+    <div id="auth-hint">Authorized access only</div>
+  </div>
+</div>
 <div id="app">
 <div id="sidebar">
   <div id="search-box">
@@ -388,6 +431,56 @@ function renderSidebar(filter=''){
 }
 renderSidebar();
 document.getElementById('search').addEventListener('input',e=>{renderSidebar(e.target.value.trim().toLowerCase());});
+
+// ── Auth gate ──────────────────────────────────────────────────────────────
+(function(){
+  // SHA-256 of the PIN — change this to lock with a different code.
+  // Current PIN: harry2026
+  // To generate a new hash: https://emn178.github.io/online-tools/sha256.html
+  const HASH = "dd7183eb07b6aeb1fe723cf93237dc988ab0ea9fe8a9895e559c8b532d2f46b0";
+
+  async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+
+  const gate  = document.getElementById('auth-gate');
+  const input = document.getElementById('auth-input');
+  const btn   = document.getElementById('auth-btn');
+  const err   = document.getElementById('auth-error');
+
+  // If already unlocked this session, skip gate immediately
+  if(sessionStorage.getItem('harry_auth') === '1'){
+    gate.style.display = 'none';
+    return;
+  }
+
+  let attempts = 0;
+  async function tryUnlock(){
+    const pin = input.value.trim();
+    if(!pin) return;
+    const h = await sha256(pin);
+    if(h === HASH){
+      sessionStorage.setItem('harry_auth','1');
+      gate.style.opacity = '0';
+      gate.style.transition = 'opacity 0.4s';
+      setTimeout(()=>gate.style.display='none', 420);
+    } else {
+      attempts++;
+      err.textContent = attempts >= 3
+        ? `Incorrect PIN (attempt ${attempts}) — check your notes`
+        : 'Incorrect PIN';
+      input.value = '';
+      input.classList.remove('shake');
+      void input.offsetWidth; // reflow to restart animation
+      input.classList.add('shake');
+      setTimeout(()=>input.classList.remove('shake'), 400);
+    }
+  }
+
+  btn.addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlock(); });
+})();
 </script>
 </body>
 </html>
